@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Datos y Gráficos - Finanzas Personales</title>
+    <!-- Enlace a Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Enlace a la librería AOS para animaciones (opcional, si se desea usar) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Estilos globales y variables de color inspiradas en MonAi */
+        :root {
+            --primary-color: #6a6ee0; /* Un tono de morado/azul suave */
+            --secondary-color: #a7a9eb; /* Un tono más claro del primario */
+            --background-light: #f4f7f6; /* Fondo muy claro */
+            --text-dark: #333; /* Texto oscuro principal */
+            --text-light: #666; /* Texto secundario/gris */
+            --success-color: #4CAF50; /* Verde para ingresos/positivo */
+            --danger-color: #f44336; /* Rojo para egresos/negativo */
+            --warning-color: #FFC107; /* Amarillo para advertencias/casi excedido */
+            --card-background: #ffffff; /* Fondo de tarjetas */
+            --border-color: #e0e0e0; /* Color de borde suave */
+            --shadow-light: rgba(0, 0, 0, 0.05); /* Sombra ligera */
+            --font-family: 'Inter', sans-serif; /* Fuente moderna y legible */
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Estilos generales de tarjetas (componentes) */
+        .card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            padding: 25px;
+            overflow: hidden; /* Para asegurar que el contenido no se desborde */
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        /* Estilos para botones (solo si se usan en esta vista, aunque no se usen para modales aquí) */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Navegación principal (solo para contexto, no funcional aquí) */
+        .main-nav {
+            background-color: var(--card-background);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item i {
+            font-size: 1.2em;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* --- VISTA DE ANÁLISIS DE DATOS ESPECÍFICA --- */
+
+        .chart-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px; /* Altura fija para el gráfico, adaptable en móvil */
+            width: 100%;
+            margin: 0 auto;
+            display: flex; /* Para centrar el canvas si es más pequeño */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-container canvas {
+            max-width: 100%; /* Asegura que el canvas no se desborde */
+            max-height: 100%;
+            display: block; /* Elimina espacio extra debajo del canvas */
+        }
+
+        /* Controles para gráficos (ej. selector de mes/año) */
+        .chart-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que los controles se envuelvan en móvil */
+        }
+
+        .chart-controls select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95em;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23666666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 30px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chart-controls select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(106, 110, 224, 0.2);
+            outline: none;
+        }
+
+        /* Media queries para responsividad */
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px auto;
+                padding: 0 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card-title {
+                font-size: 1.4em;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-item {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+
+            /* Gráficos responsivos */
+            .chart-container {
+                height: 300px; /* Altura reducida en móviles */
+            }
+
+            .chart-controls {
+                flex-direction: column; /* Apilar controles en móvil */
+                align-items: stretch; /* Estirar para ocupar el ancho */
+            }
+
+            .chart-controls select {
+                width: 100%; /* Ocupar todo el ancho disponible */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sección de Navegación Principal (solo para contexto visual) -->
+        <nav class="main-nav">
+            <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="transacciones.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transacciones</a>
+            <a href="categorias.html" class="nav-item"><i class="fas fa-tags"></i> Categorías</a>
+            <a href="presupuestos.html" class="nav-item"><i class="fas fa-chart-pie"></i> Presupuestos</a>
+            <a href="analisis.html" class="nav-item active"><i class="fas fa-chart-line"></i> Análisis</a>
+        </nav>
+
+        <!-- --- GRÁFICO 1: Gastos por categoría del mes (Dona/Pastel) --- -->
+        <div class="card" data-aos="fade-up">
+            <div class="card-header">
+                <h2 class="card-title">Gastos por Categoría del Mes 🍩</h2>
+                <div class="chart-controls">
+                    <select id="categoryExpensesMonthSelect">
+                        <option value="2025-07">Julio 2025</option>
+                        <option value="2025-06">Junio 2025</option>
+                        <option value="2025-05">Mayo 2025</option>
+                        <!-- Opciones de meses dinámicas -->
+                    </select>
+                    <select id="categoryExpensesYearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <!-- Opciones de años dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="categoryExpensesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- GRÁFICO 2: Balance real vs estimado (Líneas mensual) --- -->
+        <div class="card" data-aos="fade-up" data-aos-delay="50">
+            <div class="card-header">
+                <h2 class="card-title">Balance Real vs Estimado 📊</h2>
+                <div class="chart-controls">
+                    <select id="balanceComparisonMonthSelect">
+                        <option value="2025-07">Julio 2025</option>
+                        <option value="2025-06">Junio 2025</option>
+                        <option value="2025-05">Mayo 2025</option>
+                        <!-- Opciones de meses dinámicas -->
+                    </select>
+                    <select id="balanceComparisonYearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <!-- Opciones de años dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="balanceComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- GRÁFICO 3: Ingresos estimados vs reales (Barras comparativo) --- -->
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-header">
+                <h2 class="card-title">Ingresos Estimados vs Reales 💰</h2>
+                <div class="chart-controls">
+                    <select id="incomeComparisonMonthSelect">
+                        <option value="2025-07">Julio 2025</option>
+                        <option value="2025-06">Junio 2025</option>
+                        <option value="2025-05">Mayo 2025</option>
+                        <!-- Opciones de meses dinámicas -->
+                    </select>
+                    <select id="incomeComparisonYearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <!-- Opciones de años dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="incomeComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- GRÁFICO 4: Evolución del balance mensual (Líneas anual) --- -->
+        <div class="card" data-aos="fade-up" data-aos-delay="150">
+            <div class="card-header">
+                <h2 class="card-title">Evolución del Balance Mensual 📈</h2>
+                <div class="chart-controls">
+                    <select id="monthlyBalanceEvolutionYearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <!-- Opciones de años dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="monthlyBalanceEvolutionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- GRÁFICO 5: Distribución de gastos vs ingresos (Barras) --- -->
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <div class="card-header">
+                <h2 class="card-title">Distribución de Gastos vs Ingresos 📊</h2>
+                <div class="chart-controls">
+                    <select id="incomeExpenseDistributionMonthSelect">
+                        <option value="2025-07">Julio 2025</option>
+                        <option value="2025-06">Junio 2025</option>
+                        <option value="2025-05">Mayo 2025</option>
+                        <!-- Opciones de meses dinámicas -->
+                    </select>
+                    <select id="incomeExpenseDistributionYearSelect">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <!-- Opciones de años dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="incomeExpenseDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- Fin del container principal -->
+
+    <!-- Script para AOS (animaciones) -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Script de Chart.js (DEBERÁS AGREGARLO CUANDO LO USES) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Inicializar AOS
+        AOS.init({
+            duration: 800, // Duración de la animación en ms
+            once: true,    // Si las animaciones deben ocurrir solo una vez
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Lógica de Navegación ---
+            const navItems = document.querySelectorAll('.main-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    // e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    console.log(`Navegando a: ${item.textContent.trim()}`);
+                });
+            });
+
+            // --- Lógica de inicialización de Chart.js (PLACEHOLDER) ---
+            // Cuando integres Chart.js, descomenta la línea del script de Chart.js en el head
+            // y usa este tipo de código para inicializar tus gráficos.
+
+            // GRÁFICO 1: Gastos por categoría del mes (Dona/Pastel)
+            const ctxCategoryExpenses = document.getElementById('categoryExpensesChart');
+            if (ctxCategoryExpenses) {
+                new Chart(ctxCategoryExpenses, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Alimentación', 'Transporte', 'Ocio', 'Servicios', 'Salud', 'Educación', 'Otros'],
+                        datasets: [{
+                            label: 'Gastos por Categoría',
+                            data: [300, 150, 80, 200, 100, 50, 70],
+                            backgroundColor: [
+                                '#FF7043', '#AB47BC', '#26C6DA', '#FFCA28', '#EF5350', '#7986CB', '#9E9E9E'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // GRÁFICO 2: Balance real vs estimado (Líneas mensual)
+            const ctxBalanceComparison = document.getElementById('balanceComparisonChart');
+            if (ctxBalanceComparison) {
+                new Chart(ctxBalanceComparison, {
+                    type: 'line',
+                    data: {
+                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                        datasets: [{
+                            label: 'Balance Real',
+                            data: [1200, 1150, 1300, 1250],
+                            borderColor: 'var(--primary-color)',
+                            backgroundColor: 'rgba(106, 110, 224, 0.2)',
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Balance Estimado',
+                            data: [1250, 1200, 1280, 1230],
+                            borderColor: 'var(--text-light)',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // GRÁFICO 3: Ingresos estimados vs reales (Barras comparativo)
+            const ctxIncomeComparison = document.getElementById('incomeComparisonChart');
+            if (ctxIncomeComparison) {
+                new Chart(ctxIncomeComparison, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+                        datasets: [{
+                            label: 'Ingresos Estimados',
+                            data: [1500, 1600, 1400, 1700, 1550, 1800],
+                            backgroundColor: 'rgba(76, 175, 80, 0.7)', // success-color con opacidad
+                            borderColor: 'var(--success-color)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Ingresos Reales',
+                            data: [1450, 1650, 1380, 1720, 1500, 1780],
+                            backgroundColor: 'rgba(106, 110, 224, 0.7)', // primary-color con opacidad
+                            borderColor: 'var(--primary-color)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // GRÁFICO 4: Evolución del balance mensual (Líneas anual)
+            const ctxMonthlyBalanceEvolution = document.getElementById('monthlyBalanceEvolutionChart');
+            if (ctxMonthlyBalanceEvolution) {
+                new Chart(ctxMonthlyBalanceEvolution, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Balance Mensual',
+                            data: [500, 600, 450, 700, 550, 800, 650, 720, 680, 750, 820, 900],
+                            borderColor: 'var(--primary-color)',
+                            backgroundColor: 'rgba(106, 110, 224, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // GRÁFICO 5: Distribución de gastos vs ingresos (Barras)
+            const ctxIncomeExpenseDistribution = document.getElementById('incomeExpenseDistributionChart');
+            if (ctxIncomeExpenseDistribution) {
+                new Chart(ctxIncomeExpenseDistribution, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ingresos', 'Gastos'],
+                        datasets: [{
+                            label: 'Monto',
+                            data: [1500, 850], // Ejemplo: Ingresos $1500, Gastos $850
+                            backgroundColor: [
+                                'var(--success-color)', // Ingresos
+                                'var(--danger-color)'   // Gastos
+                            ],
+                            borderColor: [
+                                'var(--success-color)',
+                                'var(--danger-color)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: false }
+                        }
+                    }
+                });
+            }
+
+
+            // --- Lógica para los selectores de período (simulada) ---
+            document.querySelectorAll('select[id$="MonthSelect"], select[id$="YearSelect"]').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const chartId = e.target.id.replace(/(Month|Year)Select$/, 'Chart');
+                    const selectedValue = e.target.value;
+                    const selectedText = e.target.options[e.target.selectedIndex].text;
+                    console.log(`Filtro para ${chartId}: ${selectedText} (${selectedValue})`);
+                    alert(`Simulando actualización del gráfico para: ${chartId} con ${selectedText}`);
+                    // Aquí iría tu lógica para cargar nuevos datos y actualizar el gráfico de Chart.js
+                    // Por ejemplo: updateChartData(chartId, selectedValue);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
