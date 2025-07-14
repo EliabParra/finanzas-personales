@@ -1,3 +1,5 @@
+import { Modal } from './../UI/Modal.js'
+
 export class Budgets {
     constructor() {
 
@@ -113,73 +115,11 @@ export class Budgets {
                     </div>
                 </div>
             </div>
-
-            <!-- MODAL PARA AGREGAR/EDITAR PRESUPUESTO -->
-            <div class="modal-overlay" id="budgetModal">
-                <div class="modal-content">
-                    <button class="modal-close-btn" id="closeBudgetModalBtn">&times;</button>
-                    <h3 class="modal-title" id="budgetModalTitle">Nuevo Presupuesto 💸</h3>
-                    <form id="budgetForm">
-                        <input type="hidden" id="budgetId"> <!-- Para almacenar el ID del presupuesto a editar -->
-                        <div class="form-group">
-                            <label for="budgetCategory">Categoría</label>
-                            <select id="budgetCategory" required>
-                                <option value="">Selecciona una categoría</option>
-                                <!-- Las categorías se cargarán aquí dinámicamente -->
-                                <option value="alimentacion">Alimentación</option>
-                                <option value="transporte">Transporte</option>
-                                <option value="ocio">Ocio</option>
-                                <option value="servicios">Servicios</option>
-                                <option value="salud">Salud</option>
-                                <option value="educacion">Educación</option>
-                                <option value="otros">Otros</option>
-                                <option value="entretenimiento">Entretenimiento</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="budgetLimit">Monto Límite</label>
-                            <input type="number" id="budgetLimit" placeholder="Ej: 200.00" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="budgetPeriod">Periodo</label>
-                            <select id="budgetPeriod" required>
-                                <option value="mensual">Mensual</option>
-                                <option value="semanal">Semanal</option>
-                                <option value="anual">Anual</option>
-                            </select>
-                        </div>
-                        <div class="modal-actions">
-                            <button type="button" class="btn btn-cancel" id="cancelBudgetBtn">Cancelar</button>
-                            <button type="submit" class="btn">Guardar Presupuesto</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
         `
 
-        // Lógica para abrir/cerrar el modal
-        setTimeout(() => {
-            const openBtn = budgets.querySelector('#openBudgetModalBtn')
-            const closeBtn = budgets.querySelector('#closeBudgetModalBtn')
-            const cancelBtn = budgets.querySelector('#cancelBudgetBtn')
-            const modal = budgets.querySelector('#budgetModal')
-
-            function openModal() {
-                modal.classList.add('show')
-            }
-            function closeModal() {
-                modal.classList.remove('show')
-            }
-
-            openBtn?.addEventListener('click', openModal)
-            closeBtn?.addEventListener('click', closeModal)
-            cancelBtn?.addEventListener('click', closeModal)
-            // Cerrar modal al hacer click fuera del contenido
-            modal?.addEventListener('click', e => {
-                if (e.target === modal) closeModal()
-            })
-        }, 0)
-
+        const budgetModal = new Modal('budget', budgets)
+        budgets.appendChild(await budgetModal.render())
+        
         return budgets
     }
 }

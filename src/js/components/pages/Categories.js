@@ -1,3 +1,5 @@
+import { Modal } from './../UI/Modal.js'
+
 export class Categories {
     constructor() {
 
@@ -149,58 +151,10 @@ export class Categories {
                     </div>
                 </div>
             </div>
-
-            <!-- MODAL PARA AGREGAR/EDITAR CATEGORÍA -->
-            <div class="modal-overlay" id="categoryModal">
-                <div class="modal-content">
-                    <button class="modal-close-btn" id="closeCategoryModalBtn">&times;</button>
-                    <h3 class="modal-title" id="categoryModalTitle">Nueva Categoría ➕</h3>
-                    <form id="categoryForm">
-                        <input type="hidden" id="categoryId"> <!-- Para almacenar el ID de la categoría a editar -->
-                        <div class="form-group">
-                            <label for="categoryName">Nombre de la Categoría</label>
-                            <input type="text" id="categoryName" placeholder="Ej: Café, Gimnasio" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoryIcon">Icono (Clase de Font Awesome)</label>
-                            <input type="text" id="categoryIcon" placeholder="Ej: fa-coffee, fa-dumbbell" required>
-                            <small style="color: var(--text-light); font-size: 0.8em;">Busca iconos en <a href="https://fontawesome.com/icons" target="_blank" style="color: var(--primary-color); text-decoration: none;">Font Awesome</a> (ej: "fa-utensils")</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoryColor">Color</label>
-                            <input type="color" id="categoryColor" value="#6a6ee0"> <!-- Color por defecto -->
-                        </div>
-                        <div class="modal-actions">
-                            <button type="button" class="btn btn-cancel" id="cancelCategoryBtn">Cancelar</button>
-                            <button type="submit" class="btn">Guardar Categoría</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
         `
 
-        // Lógica para abrir/cerrar el modal
-        setTimeout(() => {
-            const openBtn = categories.querySelector('#openCategoryModalBtn')
-            const closeBtn = categories.querySelector('#closeCategoryModalBtn')
-            const cancelBtn = categories.querySelector('#cancelCategoryBtn')
-            const modal = categories.querySelector('#categoryModal')
-
-            function openModal() {
-                modal.classList.add('show')
-            }
-            function closeModal() {
-                modal.classList.remove('show')
-            }
-
-            openBtn?.addEventListener('click', openModal)
-            closeBtn?.addEventListener('click', closeModal)
-            cancelBtn?.addEventListener('click', closeModal)
-            // Cerrar modal al hacer click fuera del contenido
-            modal?.addEventListener('click', e => {
-                if (e.target === modal) closeModal()
-            })
-        }, 0)
+        const categoryModal = new Modal('category', categories)
+        categories.appendChild(await categoryModal.render())
 
         return categories
     }

@@ -1,9 +1,9 @@
-import { Header } from './Components/Header.js'
-import { Dashboard } from './Components/Dashboard.js'
-import { Transactions } from './Components/Transactions.js'
-import { Categories } from './Components/Categories.js'
-import { Budgets } from './Components/Budgets.js'
-import { Analysis } from './Components/Analysis.js'
+import { Header } from './components/UI/Header.js'
+import { Dashboard } from './components/pages/Dashboard.js'
+import { Transactions } from './components/pages/Transactions.js'
+import { Categories } from './components/pages/Categories.js'
+import { Budgets } from './components/pages/Budgets.js'
+import { Analysis } from './components/pages/Analysis.js'
 
 class App {
     constructor() {
