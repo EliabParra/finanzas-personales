@@ -1,3 +1,4 @@
+import DB from './classes/DB.js'
 import { Header } from './components/UI/Header.js'
 import { Dashboard } from './components/pages/Dashboard.js'
 import { Transactions } from './components/pages/Transactions.js'
@@ -7,6 +8,7 @@ import { Analysis } from './components/pages/Analysis.js'
 
 class App {
     constructor() {
+        this.db = new DB('finanzas-personales')
         this.currentPage = 'dashboard'
         this.header = new Header(this.handlePageChange.bind(this))
         this.dashboard = new Dashboard()
@@ -70,6 +72,7 @@ class App {
     }
 
     async init() {
+        this.db.openDatabase()
         await this.render()
         if (window.AOS) {
             AOS.init({

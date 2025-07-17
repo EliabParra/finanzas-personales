@@ -156,6 +156,15 @@ export class Modal {
         return this.modal
     }
 
+    handleSubmit(e) {
+        e.preventDefault()
+        const data = Object.fromEntries(
+            new FormData(e.target)
+        )
+
+        
+    }
+
     openModal() {
         this.modal.classList.add('show')
     }
