@@ -85,7 +85,8 @@ export class Transactions {
         const applyFiltersBtn = transactionsPage.querySelector('#applyFiltersBtn')
         const filtersForm = transactionsPage.querySelector('#filtersForm')
 
-        resetFiltersBtn.addEventListener('click', async () => {
+        resetFiltersBtn.addEventListener('click', async e => {
+            e.preventDefault()
             this.currentFilters = {
                 type: '',
                 category: '',
@@ -101,10 +102,12 @@ export class Transactions {
             )
         })
 
-        applyFiltersBtn.addEventListener('click', async () => {
+        applyFiltersBtn.addEventListener('click', async e => {
+            e.preventDefault()
             this.currentFilters = Object.fromEntries(
                 new FormData(filtersForm)
             )
+            
             await TransactionsService.renderTransactions(
                 await TransactionsService.getTransactions(this.currentFilters), 
                 this.transactionsTable, 

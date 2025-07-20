@@ -4,22 +4,22 @@ export class TransactionsService {
     static async getTransactions(filters = {}) {
         try {
             const db = new DB('finanzas-personales', 'transactions')
-            const transactions = await db.getAllItems()
+            let transactions = await db.getAllItems()
             
             if (filters.type) {
-                transactions.filter(t => t.type === filters.type)
+                transactions = transactions.filter(t => t.type === filters.type)
             }
             if (filters.category) {
-                transactions.filter(t => t.category === filters.category)
+                transactions = transactions.filter(t => t.category === filters.category)
             }
             if (filters.startDate) {
-                transactions.filter(t => t.date >= filters.startDate)
+                transactions = transactions.filter(t => t.date >= filters.startDate)
             }
             if (filters.endDate) {
-                transactions.filter(t => t.date <= filters.endDate)
+                transactions = transactions.filter(t => t.date <= filters.endDate)
             }
             if (filters.description) {
-                transactions.filter(t => t.description.toLowerCase().includes(filters.description.toLowerCase()))
+                transactions = transactions.filter(t => t.description.toLowerCase().includes(filters.description.toLowerCase()))
             }
 
             return transactions
