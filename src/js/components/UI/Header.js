@@ -1,11 +1,14 @@
+import LS from "../../classes/LocalStorage.js";
+
 export class Header {
     constructor(onPageChange) {
         this.onPageChange = onPageChange
-        this.currentPage = 'dashboard'
+        this.currentPage = LS.getItem('currentPage')
     }
 
     setCurrentPage(page) {
         this.currentPage = page
+        LS.setItem('currentPage', page)
     }
 
     async render() {

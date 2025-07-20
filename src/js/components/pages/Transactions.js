@@ -1,15 +1,22 @@
 import { Modal } from './../UI/Modal.js'
+import { TransactionsService } from '../../services/TransactionsService.js'
 
 export class Transactions {
     constructor() {
-        
+        this.currentFilters = {
+            type: '',
+            category: '',
+            startDate: '',
+            endDate: '',
+            description: ''
+        }
     }
 
     async render() {
-        const transactions = document.createElement('div')
-        transactions.classList.add('transactions')
-        transactions.dataset.page = 'transactions'
-        transactions.innerHTML = `
+        const transactionsPage = document.createElement('div')
+        transactionsPage.classList.add('transactions')
+        transactionsPage.dataset.page = 'transactions'
+        transactionsPage.innerHTML = `
             <!-- Sección de Transacciones con Filtros -->
             <div class="card" data-aos="fade-up">
                 <div class="card-header">
@@ -17,10 +24,10 @@ export class Transactions {
                     <button class="btn" id="openTransactionModalBtn"><i class="fas fa-plus-circle"></i> Nueva Transacción</button>
                 </div>
 
-                <div class="filters-section" data-aos="fade-up" data-aos-delay="50">
+                <form class="filters-section" data-aos="fade-up" data-aos-delay="50" id="filtersForm">
                     <div class="filter-group">
                         <label for="filterType">Tipo</label>
-                        <select id="filterType">
+                        <select id="filterType" name="type">
                             <option value="">Todos</option>
                             <option value="income">Ingreso</option>
                             <option value="expense">Egreso</option>
@@ -28,7 +35,7 @@ export class Transactions {
                     </div>
                     <div class="filter-group">
                         <label for="filterCategory">Categoría</label>
-                        <select id="filterCategory">
+                        <select id="filterCategory" name="category">
                             <option value="">Todas</option>
                             <option value="alimentacion">Alimentación</option>
                             <option value="transporte">Transporte</option>
@@ -41,130 +48,86 @@ export class Transactions {
                     </div>
                     <div class="filter-group">
                         <label for="filterStartDate">Desde</label>
-                        <input type="date" id="filterStartDate">
+                        <input type="date" id="filterStartDate" name="startDate">
                     </div>
                     <div class="filter-group">
                         <label for="filterEndDate">Hasta</label>
-                        <input type="date" id="filterEndDate">
+                        <input type="date" id="filterEndDate" name="endDate">
                     </div>
                     <div class="filter-group">
-                        <label for="filterDescription">Descripción / Categoría</label>
-                        <input type="text" id="filterDescription" placeholder="Buscar por texto...">
+                        <label for="filterDescription">Descripción</label>
+                        <input type="text" id="filterDescription" name="description">
                     </div>
                     <div class="filter-buttons">
                         <button class="btn btn-secondary" id="resetFiltersBtn"><i class="fas fa-redo"></i> Limpiar Filtros</button>
                         <button class="btn" id="applyFiltersBtn"><i class="fas fa-filter"></i> Aplicar Filtros</button>
                     </div>
-                </div>
+                </form>
 
                 <div class="transactions-table-container" data-aos="fade-up" data-aos-delay="100">
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Ejemplo de transacciones -->
-                            <tr data-transaction-id="1">
-                                <td data-label="Tipo">
-                                    <i class="fas fa-arrow-alt-circle-up transaction-type-icon type-expense"></i> Egreso
-                                </td>
-                                <td data-label="Descripción">Compras del supermercado</td>
-                                <td data-label="Categoría">Alimentación</td>
-                                <td data-label="Fecha">05 Jul, 2025</td>
-                                <td data-label="Monto" class="transaction-amount-cell expense">-$75.50</td>
-                                <td data-label="Acciones" class="action-buttons">
-                                    <button class="action-btn edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-transaction-id="2">
-                                <td data-label="Tipo">
-                                    <i class="fas fa-arrow-alt-circle-down transaction-type-icon type-income"></i> Ingreso
-                                </td>
-                                <td data-label="Descripción">Pago de nómina</td>
-                                <td data-label="Categoría">Ingresos</td>
-                                <td data-label="Fecha">01 Jul, 2025</td>
-                                <td data-label="Monto" class="transaction-amount-cell income">+$1,500.00</td>
-                                <td data-label="Acciones" class="action-buttons">
-                                    <button class="action-btn edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-transaction-id="3">
-                                <td data-label="Tipo">
-                                    <i class="fas fa-arrow-alt-circle-up transaction-type-icon type-expense"></i> Egreso
-                                </td>
-                                <td data-label="Descripción">Entradas de cine</td>
-                                <td data-label="Categoría">Ocio</td>
-                                <td data-label="Fecha">03 Jul, 2025</td>
-                                <td data-label="Monto" class="transaction-amount-cell expense">-$25.00</td>
-                                <td data-label="Acciones" class="action-buttons">
-                                    <button class="action-btn edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-transaction-id="4">
-                                <td data-label="Tipo">
-                                    <i class="fas fa-arrow-alt-circle-up transaction-type-icon type-expense"></i> Egreso
-                                </td>
-                                <td data-label="Descripción">Gasolina para el coche</td>
-                                <td data-label="Categoría">Transporte</td>
-                                <td data-label="Fecha">02 Jul, 2025</td>
-                                <td data-label="Monto" class="transaction-amount-cell expense">-$40.00</td>
-                                <td data-label="Acciones" class="action-buttons">
-                                    <button class="action-btn edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr data-transaction-id="5">
-                                <td data-label="Tipo">
-                                    <i class="fas fa-arrow-alt-circle-down transaction-type-icon type-income"></i> Ingreso
-                                </td>
-                                <td data-label="Descripción">Venta de artículos usados</td>
-                                <td data-label="Categoría">Otros</td>
-                                <td data-label="Fecha">04 Jul, 2025</td>
-                                <td data-label="Monto" class="transaction-amount-cell income">+$120.00</td>
-                                <td data-label="Acciones" class="action-buttons">
-                                    <button class="action-btn edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn delete" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
+                    <table class="transactions-table" id="transactionsTable">
+                        
                     </table>
                 </div>
             </div>
         `
 
-        const transactionModal = new Modal('transaction', transactions)
-        transactions.appendChild(await transactionModal.render())
+        this.transactionModal = new Modal('transaction', transactionsPage, this.handleSubmit.bind(this))
+        transactionsPage.appendChild(await this.transactionModal.render())
+        this.transactionsTable = transactionsPage.querySelector('#transactionsTable')
+        await TransactionsService.renderTransactions(
+            await TransactionsService.getTransactions(), 
+            this.transactionsTable, 
+            this.transactionModal
+        )
 
-        return transactions
+        const resetFiltersBtn = transactionsPage.querySelector('#resetFiltersBtn')
+        const applyFiltersBtn = transactionsPage.querySelector('#applyFiltersBtn')
+        const filtersForm = transactionsPage.querySelector('#filtersForm')
+
+        resetFiltersBtn.addEventListener('click', async () => {
+            this.currentFilters = {
+                type: '',
+                category: '',
+                startDate: '',
+                endDate: '',
+                description: ''
+            }
+            filtersForm.reset()
+            await TransactionsService.renderTransactions(
+                await TransactionsService.getTransactions(), 
+                this.transactionsTable, 
+                this.transactionModal
+            )
+        })
+
+        applyFiltersBtn.addEventListener('click', async () => {
+            this.currentFilters = Object.fromEntries(
+                new FormData(filtersForm)
+            )
+            await TransactionsService.renderTransactions(
+                await TransactionsService.getTransactions(this.currentFilters), 
+                this.transactionsTable, 
+                this.transactionModal
+            )
+        })
+
+        return transactionsPage
+    }
+
+    async handleSubmit(data) {
+        data.amount = parseFloat(data.amount)
+        if (data.id) {
+            data.id = parseInt(data.id)
+            await TransactionsService.updateTransaction(data)
+        } else {
+            delete data.id
+            await TransactionsService.addTransaction(data)
+        }
+        await TransactionsService.renderTransactions(
+            await TransactionsService.getTransactions(this.currentFilters), 
+            this.transactionsTable,
+            this.transactionModal
+        )
     }
 }
