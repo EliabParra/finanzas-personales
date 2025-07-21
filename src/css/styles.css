@@ -1653,3 +1653,160 @@ body {
         width: 100%; /* Ocupar todo el ancho disponible */
     }
 }
+
+/* --- MEJORAS EN EL TEMA DE LOS JUEGOS DEL HAMBRE --- */
+
+/*
+body {
+    /* More detailed Mockingjay emblem SVG as background *
+    background-image: url('data:image/svg+xml;utf8,<svg width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg"><circle cx="160" cy="160" r="140" fill="none" stroke="gold" stroke-width="12"/><g><path d="M160 70 Q200 120 270 120 Q220 170 270 270 Q160 230 160 320 Q160 230 50 270 Q100 170 50 120 Q120 120 160 70 Z" fill="gold" stroke="orange" stroke-width="6"/></g><g><path d="M160 120 Q180 140 210 130 Q200 160 220 180 Q190 170 170 200 Q180 170 150 160 Q170 150 160 120 Z" fill="#fff8c0" stroke="orange" stroke-width="3"/></g><g><rect x="140" y="150" width="120" height="12" rx="6" fill="gold" transform="rotate(-30 200 156)"/><polygon points="250,156 270,150 250,162" fill="orange"/></g></svg>');
+    background-repeat: repeat;
+    background-size: 420px 420px;
+}*/
+
+:root {
+    --hg-gold: #FFD700;
+    --hg-black: #1a1a1a;
+    --hg-flame: #FF9800;
+    --hg-flame2: #FF5722;
+    --hg-glow: 0 0 12px 2px var(--hg-gold), 0 0 24px 4px var(--hg-flame2);
+}
+
+/* Tarjeta y brillo dorado modal */
+.card, .modal-content {
+    border: 2px solid var(--hg-gold) !important;
+    box-shadow: 0 0 16px 2px var(--hg-gold), 0 0 32px 4px var(--hg-flame2), 0 8px 25px var(--shadow-dark);
+    position: relative;
+}
+
+.card::before {
+    background: linear-gradient(to right, var(--hg-gold), var(--hg-flame2), var(--hg-gold));
+    height: 7px;
+}
+
+/* Encabezados de sección con sombra de texto dorada */
+.card-title, .modal-title, .main-nav, .summary-label {
+    text-shadow: 0 2px 8px var(--hg-gold), 0 0 2px var(--hg-flame2);
+    color: var(--hg-gold) !important;
+    letter-spacing: 2px;
+}
+
+/* Botones con detalles dorados y llamas */
+.btn {
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%);
+    color: var(--hg-black) !important;
+    border: 2px solid var(--hg-gold);
+    box-shadow: 0 2px 8px var(--hg-gold);
+    text-shadow: 0 1px 2px #fff8;
+}
+.btn:hover {
+    background: linear-gradient(90deg, var(--hg-flame2) 0%, var(--hg-gold) 100%);
+    color: #fff !important;
+    border-color: var(--hg-flame2);
+    box-shadow: 0 0 16px var(--hg-flame2), 0 2px 8px var(--hg-gold);
+}
+
+/* Añadir, editar y eliminar iconos con motivos de Los juegos del hambre (emoji) */
+.btn i.fa-plus-circle:before { content: '🔥'; font-style: normal; }
+.btn i.fa-edit:before { content: '🏹'; font-style: normal; }
+.btn i.fa-trash-alt:before { content: '🦅'; font-style: normal; }
+
+.budget-action-btn.edit:before, .category-action-btn.edit:before, .transaction-action-btn.edit:before {
+    content: '🏹';
+}
+.budget-action-btn.delete:before, .category-action-btn.delete:before, .transaction-action-btn.delete:before {
+    content: '🦅';
+}
+
+/* Estilo de insignia de la tarjeta «distrito» */
+.card::after {
+    content: 'District 12';
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: var(--hg-black);
+    color: var(--hg-gold);
+    font-family: var(--font-family-title);
+    font-size: 0.85em;
+    padding: 3px 12px;
+    border-radius: 12px;
+    border: 1.5px solid var(--hg-gold);
+    box-shadow: 0 0 8px var(--hg-gold);
+    letter-spacing: 1px;
+    opacity: 0.85;
+    z-index: 2;
+}
+
+/* Efectos al pasar el cursor con transiciones doradas/llameantes */
+.card:hover, .modal-content:hover {
+    box-shadow: 0 0 32px 8px var(--hg-gold), 0 0 48px 12px var(--hg-flame2), 0 8px 25px var(--shadow-dark);
+    border-color: var(--hg-flame2) !important;
+}
+
+.nav-item.active, .nav-item:hover {
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%) !important;
+    color: var(--hg-black) !important;
+    text-shadow: 0 2px 8px var(--hg-gold);
+}
+
+/* Barras de desplazamiento personalizadas para una apariencia más inmersiva */
+::-webkit-scrollbar {
+    width: 10px;
+    background: var(--hg-black);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--hg-gold), var(--hg-flame2));
+    border-radius: 8px;
+}
+
+/* Contenedor de gráficos con un sutil borde en forma de llama */
+.chart-container {
+    border: 2px solid var(--hg-flame2);
+    box-shadow: 0 0 12px 2px var(--hg-flame2);
+}
+
+/* Superposición modal con brillo dorado */
+.modal-overlay.show {
+    box-shadow: 0 0 64px 16px var(--hg-gold) inset;
+}
+
+/* Añadir un sutil borde dorado a las tablas */
+.data-table, .transactions-table {
+    border: 2px solid var(--hg-gold);
+    box-shadow: 0 0 8px var(--hg-gold);
+}
+
+/* Fin de las mejoras del tema de Los juegos del hambre */
+
+/* Visibilidad del encabezado y corrección del estilo */
+.header {
+    width: 100%;
+    background: rgba(20, 20, 20, 0.92); /* Oscuro semitransparente para contraste */
+    color: var(--hg-gold);
+    z-index: 2000;
+    position: relative;
+    padding: 24px 0 18px 0;
+    box-shadow: 0 4px 18px 0 rgba(0,0,0,0.25), 0 1.5px 0 var(--hg-gold);
+    border-bottom: 2.5px solid var(--hg-gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.header .nav-item {
+    color: var(--hg-gold) !important;
+    background: none !important;
+    font-size: 1.15em;
+    font-family: var(--font-family-title);
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 10px 22px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.header .nav-item.active, .header .nav-item:hover {
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%) !important;
+    color: var(--hg-black) !important;
+    box-shadow: 0 2px 12px var(--hg-gold);
+}

@@ -88,7 +88,7 @@ export class Analysis {
             </div>
         `
 
-        // Helper: Get all transactions, categories, and estimates
+        // Obtiene todas las transacciones, categorías y estimaciones
         const [transactions, categories] = await Promise.all([
             TransactionsService.getTransactions(),
             CategoriesService.getCategories()
@@ -101,7 +101,7 @@ export class Analysis {
             estimates = []
         }
 
-        // Helper: Get all months/years present in transactions
+        // Obtiene todos los meses/años presentes en las transacciones
         function getMonthYearOptions(transactions) {
             const options = new Set()
             transactions.forEach(t => {
@@ -119,13 +119,13 @@ export class Analysis {
             return Array.from(options).sort().reverse()
         }
 
-        // Fill selects with real options
+        // Rellenar selecciones con opciones reales
         const months = getMonthYearOptions(transactions)
         const years = getYearOptions(transactions)
         function fillSelect(select, options, formatFn) {
             select.innerHTML = options.map(opt => `<option value="${opt}">${formatFn ? formatFn(opt) : opt}</option>`).join('')
         }
-        // Format helpers
+        // Ayudantes de formato
         function formatMonthYear(val) {
             const [year, month] = val.split('-')
             const monthsES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
@@ -133,7 +133,7 @@ export class Analysis {
         }
         function formatYear(val) { return val }
 
-        // Fill all selects
+        // Llenar todas las selecciones
         fillSelect(analysis.querySelector('#categoryExpensesMonthSelect'), months, formatMonthYear)
         fillSelect(analysis.querySelector('#categoryExpensesYearSelect'), years, formatYear)
         fillSelect(analysis.querySelector('#balanceComparisonMonthSelect'), months, formatMonthYear)
@@ -144,7 +144,7 @@ export class Analysis {
         fillSelect(analysis.querySelector('#incomeExpenseDistributionMonthSelect'), months, formatMonthYear)
         fillSelect(analysis.querySelector('#incomeExpenseDistributionYearSelect'), years, formatYear)
 
-        // Helper: Aggregate data for each chart
+        // Agregar datos para cada gráfico
         function getCategoryExpensesData(monthYear) {
             const [year, month] = monthYear.split('-')
             const filtered = transactions.filter(t => t.type === 'expense' && t.date.startsWith(`${year}-${month}`))
@@ -160,11 +160,11 @@ export class Analysis {
         }
         function getBalanceComparisonData(monthYear) {
             const [year, month] = monthYear.split('-')
-            // Real: sum by week
+            // Real: suma por semana
             const filtered = transactions.filter(t => t.date.startsWith(`${year}-${month}`))
             const weeks = [1,2,3,4]
             const real = weeks.map(week => {
-                // Assume week 1: days 1-7, week 2: 8-14, etc.
+                // Supone que la semana 1 abarca los días 1 a 7, la semana 2 los días 8 a 14, etc.
                 const start = (week-1)*7+1
                 const end = week*7
                 return filtered.filter(t => {
@@ -184,7 +184,7 @@ export class Analysis {
         }
         function getIncomeComparisonData(monthYear) {
             const [year, month] = monthYear.split('-')
-            // Real: sum incomes for each month up to selected
+            // Real: suma de los ingresos de cada mes hasta la fecha seleccionada.
             const monthsArr = Array.from({length:6}, (_,i) => (parseInt(month,10)-5+i).toString().padStart(2,'0'))
             const labels = monthsArr.map(m => formatMonthYear(`${year}-${m}`))
             const real = monthsArr.map(m => {
@@ -214,7 +214,7 @@ export class Analysis {
             return { labels: ['Ingresos','Gastos'], data: [income, expense] }
         }
 
-        // Chart.js initialization with real data
+        // Inicialización de Chart.js con datos reales
         // 1. Gastos por categoría del mes
         const ctxCategoryExpenses = analysis.querySelector('#categoryExpensesChart')
         const monthYear1 = months[0] || '2025-07'
