@@ -117,9 +117,17 @@ export class Budgets {
             </div>
         `
 
-        const budgetModal = new Modal('budget', budgets)
-        budgets.appendChild(await budgetModal.render())
-        
+        // Modal logic
+        this.budgetModal = null
+        const openBudgetModalBtn = budgets.querySelector('#openBudgetModalBtn')
+        openBudgetModalBtn.addEventListener('click', async () => {
+            if (!this.budgetModal) {
+                this.budgetModal = new Modal('budget', budgets)
+                budgets.appendChild(await this.budgetModal.render())
+            }
+            this.budgetModal.openModal()
+        })
+
         return budgets
     }
 }

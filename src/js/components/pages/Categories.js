@@ -24,14 +24,23 @@ export class Categories {
             </div>
         `
 
-        this.categoryModal = new Modal('category', categoriesPage, this.handleSubmit.bind(this))
-        categoriesPage.appendChild(await this.categoryModal.render())
         this.categoriesGrid = categoriesPage.querySelector('#categoriesGrid')
         await CategoriesService.renderCategories(
             await CategoriesService.getCategories(), 
             this.categoriesGrid, 
-            this.categoryModal
+            null
         )
+
+        // Modal logic
+        this.categoryModal = null
+        const openCategoryModalBtn = categoriesPage.querySelector('#openCategoryModalBtn')
+        openCategoryModalBtn.addEventListener('click', async () => {
+            if (!this.categoryModal) {
+                this.categoryModal = new Modal('category', categoriesPage, this.handleSubmit.bind(this))
+                categoriesPage.appendChild(await this.categoryModal.render())
+            }
+            this.categoryModal.openModal()
+        })
 
         return categoriesPage
     }

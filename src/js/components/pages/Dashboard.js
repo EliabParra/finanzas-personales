@@ -49,12 +49,21 @@ export class Dashboard {
             </div>
         `
 
-        this.transactionModal = new Modal('transaction', this.dashboardPage, this.handleSubmit.bind(this))
-        this.dashboardPage.appendChild(await this.transactionModal.render())
         await this.renderTransactions()
 
         const allTransactionsBtn = this.dashboardPage.querySelector('#allTransactionsBtn')
         allTransactionsBtn.addEventListener('click', async () => await this.onPageChange('transactions'))
+
+        // Modal logic
+        this.transactionModal = null
+        const openTransactionModalBtn = this.dashboardPage.querySelector('#openTransactionModalBtn')
+        openTransactionModalBtn.addEventListener('click', async () => {
+            if (!this.transactionModal) {
+                this.transactionModal = new Modal('transaction', this.dashboardPage, this.handleSubmit.bind(this))
+                this.dashboardPage.appendChild(await this.transactionModal.render())
+            }
+            this.transactionModal.openModal()
+        })
 
         return this.dashboardPage
     }
