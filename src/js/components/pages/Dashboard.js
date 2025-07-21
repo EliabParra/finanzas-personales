@@ -1,15 +1,17 @@
 import { Modal } from './../UI/Modal.js'
+import { TransactionsService } from '../../services/TransactionsService.js'
+import { CategoriesService } from '../../services/CategoriesService.js'
 
 export class Dashboard {
-    constructor() {
-
+    constructor(onPageChange) {
+        this.onPageChange = onPageChange
     }
 
     async render() {
-        const dashboard = document.createElement('div')
-        dashboard.classList.add('dashboard')
-        dashboard.dataset.page = 'dashboard'
-        dashboard.innerHTML = `
+        this.dashboardPage = document.createElement('div')
+        this.dashboardPage.classList.add('dashboard')
+        this.dashboardPage.dataset.page = 'dashboard'
+        this.dashboardPage.innerHTML = `
             <!-- Sección de Resumen Mensual -->
             <div class="card" data-aos="fade-up">
                 <div class="card-header">
@@ -20,17 +22,17 @@ export class Dashboard {
                     <div class="summary-card summary-income">
                         <i class="fas fa-arrow-alt-circle-down summary-icon"></i> <!-- Icono para ingresos -->
                         <span class="summary-label">Ingresos</span>
-                        <span class="summary-amount">$1,500.00</span>
+                        <span class="summary-amount"></span>
                     </div>
                     <div class="summary-card summary-expense">
                         <i class="fas fa-arrow-alt-circle-up summary-icon"></i> <!-- Icono para egresos -->
                         <span class="summary-label">Gastos</span>
-                        <span class="summary-amount">$850.00</span>
+                        <span class="summary-amount"></span>
                     </div>
                     <div class="summary-card summary-balance">
                         <i class="fas fa-wallet summary-icon"></i> <!-- Icono para balance -->
                         <span class="summary-label">Balance</span>
-                        <span class="summary-amount">$650.00</span>
+                        <span class="summary-amount"></span>
                     </div>
                 </div>
             </div>
@@ -39,68 +41,84 @@ export class Dashboard {
             <div class="card" data-aos="fade-up" data-aos-delay="100">
                 <div class="card-header">
                     <h2 class="card-title">Transacciones Recientes 📈</h2>
-                    <!-- Aquí podrías tener un botón para ver todas las transacciones -->
+                    <button class="btn" id="allTransactionsBtn">Ver todas <i class="fas fa-arrow-alt-circle-right"></i></button>
                 </div>
                 <ul class="transactions-list">
-                    <li class="transaction-item">
-                        <div class="transaction-icon-wrapper">
-                            <i class="fas fa-shopping-cart" style="color: #FF7043;"></i> <!-- Icono de compras -->
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-description">Compras del supermercado</div>
-                            <div class="transaction-category-date">Alimentación • 05 Jul, 2025</div>
-                        </div>
-                        <div class="transaction-amount expense">-$75.50</div>
-                        <button class="delete-transaction-btn" data-transaction-id="1">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </li>
-                    <li class="transaction-item">
-                        <div class="transaction-icon-wrapper">
-                            <i class="fas fa-briefcase" style="color: #66BB6A;"></i> <!-- Icono de trabajo -->
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-description">Pago de nómina</div>
-                            <div class="transaction-category-date">Ingresos • 01 Jul, 2025</div>
-                        </div>
-                        <div class="transaction-amount income">+$1,500.00</div>
-                        <button class="delete-transaction-btn" data-transaction-id="2">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </li>
-                    <li class="transaction-item">
-                        <div class="transaction-icon-wrapper">
-                            <i class="fas fa-film" style="color: #26C6DA;"></i> <!-- Icono de ocio -->
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-description">Entradas de cine</div>
-                            <div class="transaction-category-date">Ocio • 03 Jul, 2025</div>
-                        </div>
-                        <div class="transaction-amount expense">-$25.00</div>
-                        <button class="delete-transaction-btn" data-transaction-id="3">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </li>
-                    <li class="transaction-item">
-                        <div class="transaction-icon-wrapper">
-                            <i class="fas fa-gas-pump" style="color: #AB47BC;"></i> <!-- Icono de gasolina -->
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-description">Gasolina para el coche</div>
-                            <div class="transaction-category-date">Transporte • 02 Jul, 2025</div>
-                        </div>
-                        <div class="transaction-amount expense">-$40.00</div>
-                        <button class="delete-transaction-btn" data-transaction-id="4">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </li>
+                    
                 </ul>
             </div>
         `
 
-        const transactionModal = new Modal('transaction', dashboard)
-        dashboard.appendChild(await transactionModal.render())
+        this.transactionModal = new Modal('transaction', this.dashboardPage, this.handleSubmit.bind(this))
+        this.dashboardPage.appendChild(await this.transactionModal.render())
+        await this.renderTransactions()
 
-        return dashboard
+        const allTransactionsBtn = this.dashboardPage.querySelector('#allTransactionsBtn')
+        allTransactionsBtn.addEventListener('click', async () => await this.onPageChange('transactions'))
+
+        return this.dashboardPage
+    }
+
+    async renderTransactions() {
+        console.log('Renderizando transacciones')
+        const transactionsList = this.dashboardPage.querySelector('.transactions-list')
+        if (!transactionsList) return
+
+        transactionsList.innerHTML = ''
+        let transactions = await TransactionsService.getTransactions()
+        transactions = transactions.filter(t => Date.parse(t.date) >= Date.now() - 30 * 24 * 60 * 60 * 1000)
+
+        if (transactions.length === 0) {
+            transactionsList.innerHTML = `
+                <li class="empty-list-message">
+                    <i class="fas fa-info-circle"></i> No hay transacciones para mostrar
+                </li>
+            `
+            return
+        }
+
+        transactions
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach(async t => {
+            t.category = await CategoriesService.getCategory(t.categoryId)
+            t.amount = this.formatCurrency(t.amount)
+            const li = document.createElement('li')
+            li.innerHTML = `
+                <li class="transaction-item">
+                    <div class="transaction-icon-wrapper" style="background-color: ${t.category.color};">
+                        ${t.category.icon}
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-description">${t.description}</div>
+                        <div class="transaction-category-date">${t.category.name} • ${t.date}</div>
+                    </div>
+                    <div class="transaction-amount ${t.type === 'income' ? 'income' : 'expense'}">${t.amount}</div>
+                </li>
+            `
+            transactionsList.appendChild(li)
+        })
+    }
+
+    formatCurrency(amount) {
+        return amount.toLocaleString('en-EN', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })
+    }
+
+    async handleSubmit(data) {
+        data.amount = parseFloat(data.amount)
+        const category = await CategoriesService.getCategory(parseInt(data.categoryId))
+        data.categoryId = category.id
+        if (data.id) {
+            data.id = parseInt(data.id)
+            await TransactionsService.updateTransaction(data)
+        } else {
+            delete data.id
+            await TransactionsService.addTransaction(data)
+        }
+        await this.renderTransactions()
     }
 }

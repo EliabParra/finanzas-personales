@@ -1,15 +1,19 @@
+import DB from './classes/DB.js'
+import LS from './classes/LocalStorage.js'
 import { Header } from './components/UI/Header.js'
 import { Dashboard } from './components/pages/Dashboard.js'
 import { Transactions } from './components/pages/Transactions.js'
 import { Categories } from './components/pages/Categories.js'
 import { Budgets } from './components/pages/Budgets.js'
 import { Analysis } from './components/pages/Analysis.js'
+import { TransactionsService } from './services/TransactionsService.js'
 
 class App {
     constructor() {
-        this.currentPage = 'dashboard'
+        this.db = new DB('finanzas-personales')
+        this.currentPage = LS.getItem('currentPage') || 'dashboard'
         this.header = new Header(this.handlePageChange.bind(this))
-        this.dashboard = new Dashboard()
+        this.dashboard = new Dashboard(this.handlePageChange.bind(this))
         this.transactions = new Transactions()
         this.categories = new Categories()
         this.budgets = new Budgets()
@@ -35,7 +39,9 @@ class App {
     }
 
     async handlePageChange(page) {
-        this.currentTab = page
+        this.currentPage = page
+        LS.setItem('currentPage', page)
+        this.header.updateActivePage(page)
         const mainContent = document.querySelector('.main-content')
         if (!mainContent) return
 
@@ -61,6 +67,8 @@ class App {
         }
 
         if (component) mainContent.appendChild(component)
+
+        TransactionsService.updateBalance(await TransactionsService.getTransactions())
         
         if (window.AOS) {
             setTimeout(() => {
@@ -70,6 +78,7 @@ class App {
     }
 
     async init() {
+        this.db.openDatabase()
         await this.render()
         if (window.AOS) {
             AOS.init({

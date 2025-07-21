@@ -1,11 +1,14 @@
+import LS from "../../classes/LocalStorage.js";
+
 export class Header {
     constructor(onPageChange) {
         this.onPageChange = onPageChange
-        this.currentPage = 'dashboard'
+        this.currentPage = LS.getItem('currentPage')
     }
 
     setCurrentPage(page) {
         this.currentPage = page
+        LS.setItem('currentPage', page)
     }
 
     async render() {
@@ -40,25 +43,20 @@ export class Header {
                 const page = item.dataset.page
                 this.setCurrentPage(page)
                 this.onPageChange(page)
-                navItems.forEach(nav => nav.classList.remove('active'))
-                item.classList.add('active')
-                console.log(`Navegando a: ${page}`)
+                this.updateActivePage(page)
             })
         })
 
         return header
     }
 
-    handlePageClick(page) {
-        // Actualizar botones activos
-        const buttons = document.querySelectorAll('.page-btn');
-        buttons.forEach(button => {
-            button.classList.toggle('active', button.dataset.page === page);
-        });
-
-        // Notificar al componente principal
-        if (this.onPageChange) {
-            this.onPageChange(page);
-        }
+    async updateActivePage(page) {
+        const navItems = document.querySelectorAll('.nav-item')
+        navItems.forEach(item => {
+            item.classList.remove('active')
+            if (item.dataset.page === page) {
+                item.classList.add('active')
+            }
+        })
     }
 }
