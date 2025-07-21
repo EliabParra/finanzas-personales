@@ -1810,3 +1810,14 @@ body {
     color: var(--hg-black) !important;
     box-shadow: 0 2px 12px var(--hg-gold);
 }
+
+/* Asegura que el modal siempre esté por encima del header */
+.modal-overlay {
+    z-index: 3000 !important;
+    position: fixed !important;
+}
+
+.modal-content {
+    z-index: 3100 !important;
+    position: relative !important;
+}
