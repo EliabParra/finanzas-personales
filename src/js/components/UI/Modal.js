@@ -1,3 +1,5 @@
+import { CategoriesService } from "../../services/CategoriesService.js"
+
 export class Modal {
     constructor(type, page, onSubmit) {
         this.type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()
@@ -72,47 +74,44 @@ export class Modal {
                     </div>
                     <div class="form-group">
                         <label for="category">Categoría</label>
-                        <select id="category" name="category" required>
+                        <select id="category" name="categoryId" required>
                             <option value="">Selecciona una categoría</option>
-                            <option value="alimentacion">Alimentación</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="ocio">Ocio</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="salud">Salud</option>
-                            <option value="educacion">Educación</option>
-                            <option value="otros">Otros</option>
+                            ${await CategoriesService.getCategories().then(categories => {
+                                categories = categories.sort((a, b) => a.name.localeCompare(b.name))
+                                return categories.map(category => `
+                                    <option value="${category.id}">${category.name}</option>
+                                `).join('')
+                            })}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Descripción (opcional)</label>
                         <input type="text" name="description" id="description" placeholder="Ej: Cena con amigos" value="">
                     </div>
-                    <input type="hidden" id="transactionId" name="id">
+                    <input type="hidden" id="transactionId">
                 `
                 title.innerHTML = `Nueva Transacción 💸`
                 break
             case 'category':
                 form.innerHTML = `
-                    <input type="hidden" id="categoryId"> <!-- Para almacenar el ID de la categoría a editar -->
                     <div class="form-group">
                         <label for="categoryName">Nombre de la Categoría</label>
-                        <input type="text" id="categoryName" placeholder="Ej: Café, Gimnasio" required>
+                        <input type="text" id="categoryName" name="name" placeholder="Ej: Café, Gimnasio" required>
                     </div>
                     <div class="form-group">
-                        <label for="categoryIcon">Icono (Clase de Font Awesome)</label>
-                        <input type="text" id="categoryIcon" placeholder="Ej: fa-coffee, fa-dumbbell">
-                        <small style="color: var(--text-light); font-size: 0.8em;">Busca iconos en <a href="https://fontawesome.com/icons" target="_blank" style="color: var(--primary-color); text-decoration: none;">Font Awesome</a> (ej: "fa-utensils")</small>
+                        <label for="categoryIcon">Emoji</label>
+                        <input type="text" id="categoryIcon" name="icon" placeholder="Ej: ☕, 🏋️‍♂️">
                     </div>
                     <div class="form-group">
                         <label for="categoryColor">Color</label>
-                        <input type="color" id="categoryColor" value="#6a6ee0"> <!-- Color por defecto -->
+                        <input type="color" id="categoryColor" name="color" value="#6a6ee0">
                     </div>
+                    <input type="hidden" id="categoryId">
                 `
                 title.innerHTML = `Nueva Categoría ➕`
                 break
             case 'budget':
                 form.innerHTML = `
-                    <input type="hidden" id="budgetId"> <!-- Para almacenar el ID del presupuesto a editar -->
                     <div class="form-group">
                         <label for="budgetCategory">Categoría</label>
                         <select id="budgetCategory" required>
@@ -140,6 +139,7 @@ export class Modal {
                             <option value="anual">Anual</option>
                         </select>
                     </div>
+                    <input type="hidden" id="budgetId">
                 `
                 title.innerHTML = `Nuevo Presupuesto 💸`
                 break
@@ -185,17 +185,23 @@ export class Modal {
     }
 
     setData(data) {
-        this.modal.querySelectorAll('input, select').forEach(input => {
+        this.modal.querySelectorAll('input').forEach(input => {
             if (input.name in data && input.type !== 'radio') input.value = data[input.name]
             if (input.type === 'radio') input.checked = (input.value === data[input.name])
+        })
+        this.modal.querySelectorAll('select').forEach(select => {
+            if (select.name in data) {
+                select.value = data[select.name]
+            }
         })
     }
 
     clearData() {
         this.modal.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'radio') input.value = ''
+            if (input.type !== 'radio' && input.type !== 'color') input.value = ''
             if (input.type === 'radio') input.checked = false
+            if (input.type === 'color') input.value = '#6a6ee0'
+            if (input.type === 'date') input.value = this.currentDate
         })
-        this.modal.querySelector('#date').value = this.currentDate
     }
 }

@@ -1,4 +1,5 @@
 import DB from './../classes/DB.js'
+import { CategoriesService } from './CategoriesService.js'
 
 export class TransactionsService {
     static async getTransactions(filters = {}) {
@@ -105,7 +106,6 @@ export class TransactionsService {
                 </tr>
             </thead>
             <tbody>
-                
             </tbody>
         `
 
@@ -120,9 +120,8 @@ export class TransactionsService {
             return
         }
 
-        transactions
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .forEach(t => {
+        for (const t of transactions.sort((a, b) => new Date(b.date) - new Date(a.date))) {
+            t.category = await CategoriesService.getCategory(t.categoryId)
             t.amount = this.formatCurrency(t.amount)
             const tr = document.createElement('tr')
             tr.innerHTML = `
@@ -131,25 +130,25 @@ export class TransactionsService {
                     ${t.type === 'income' ? 'Ingreso' : 'Egreso'}
                 </td>
                 <td data-label="Descripción">${t.description}</td>
-                <td data-label="Categoría">${t.category}</td>
+                <td data-label="Categoría">${t.category.name}</td>
                 <td data-label="Fecha">${t.date}</td>
                 <td data-label="Monto" class="transaction-amount-cell ${t.type}">
                     ${t.type === 'income' ? '+' : '-'}${t.amount}
                 </td>
                 <td data-label="Acciones" class="action-buttons">
-                    <button class="action-btn edit" title="Editar" data-transaction-id="${t.id}">
+                    <button class="transaction-action-btn edit" title="Editar" data-transaction-id="${t.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn delete" title="Eliminar" data-transaction-id="${t.id}">
+                    <button class="transaction-action-btn delete" title="Eliminar" data-transaction-id="${t.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             `
             transactionsTable.querySelector('tbody').appendChild(tr)
-        })
+        }
 
-        const editTransactionBtns = transactionsTable.querySelectorAll('.action-btn.edit')
-        const deleteTransactionBtns = transactionsTable.querySelectorAll('.action-btn.delete')
+        const editTransactionBtns = transactionsTable.querySelectorAll('.transaction-action-btn.edit')
+        const deleteTransactionBtns = transactionsTable.querySelectorAll('.transaction-action-btn.delete')
 
         editTransactionBtns.forEach(editTransactionBtn => {
             editTransactionBtn.addEventListener('click', async () => {

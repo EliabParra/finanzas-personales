@@ -18,7 +18,7 @@ export default class IndexedDbManager {
                     const transactionsStore = db.createObjectStore('transactions', { keyPath: 'id', autoIncrement: true });
                     transactionsStore.createIndex('date', 'date');
                     transactionsStore.createIndex('type', 'type');
-                    transactionsStore.createIndex('category', 'category');
+                    transactionsStore.createIndex('categoryId', 'categoryId');
                 }
 
                 // Crear object store para estimaciones si no existe
@@ -27,15 +27,16 @@ export default class IndexedDbManager {
                     const estimatesStore = db.createObjectStore('estimates', { keyPath: 'id', autoIncrement: true });
                     estimatesStore.createIndex('month', 'month');
                     estimatesStore.createIndex('year', 'year');
-                    estimatesStore.createIndex('category', 'category');
+                    estimatesStore.createIndex('categoryId', 'categoryId');
                 }
 
                 // Crear object store para categorías si no existe
                 if (!db.objectStoreNames.contains('categories')) {
                     console.log('Creando almacén de categorías');
                     const categoriesStore = db.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
-                    categoriesStore.createIndex('type', 'type');
                     categoriesStore.createIndex('name', 'name', { unique: true });
+                    categoriesStore.createIndex('icon', 'icon');
+					categoriesStore.createIndex('color', 'color');
                 }
 			};
 

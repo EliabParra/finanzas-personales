@@ -1,6 +1,6 @@
 import { Modal } from './../UI/Modal.js'
 import { TransactionsService } from '../../services/TransactionsService.js'
-
+import { CategoriesService } from '../../services/CategoriesService.js'
 export class Transactions {
     constructor() {
         this.currentFilters = {
@@ -37,13 +37,11 @@ export class Transactions {
                         <label for="filterCategory">Categoría</label>
                         <select id="filterCategory" name="category">
                             <option value="">Todas</option>
-                            <option value="alimentacion">Alimentación</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="ocio">Ocio</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="salud">Salud</option>
-                            <option value="educacion">Educación</option>
-                            <option value="otros">Otros</option>
+                            ${await CategoriesService.getCategories().then(categories => {
+                                return categories.map(category => `
+                                    <option value="${category.id}">${category.name}</option>
+                                `).join('')
+                            })}
                         </select>
                     </div>
                     <div class="filter-group">
@@ -120,6 +118,8 @@ export class Transactions {
 
     async handleSubmit(data) {
         data.amount = parseFloat(data.amount)
+        const category = await CategoriesService.getCategory(parseInt(data.categoryId))
+        data.categoryId = category.id
         if (data.id) {
             data.id = parseInt(data.id)
             await TransactionsService.updateTransaction(data)

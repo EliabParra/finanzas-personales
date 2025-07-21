@@ -43,25 +43,20 @@ export class Header {
                 const page = item.dataset.page
                 this.setCurrentPage(page)
                 this.onPageChange(page)
-                navItems.forEach(nav => nav.classList.remove('active'))
-                item.classList.add('active')
-                console.log(`Navegando a: ${page}`)
+                this.updateActivePage(page)
             })
         })
 
         return header
     }
 
-    handlePageClick(page) {
-        // Actualizar botones activos
-        const buttons = document.querySelectorAll('.page-btn');
-        buttons.forEach(button => {
-            button.classList.toggle('active', button.dataset.page === page);
-        });
-
-        // Notificar al componente principal
-        if (this.onPageChange) {
-            this.onPageChange(page);
-        }
+    async updateActivePage(page) {
+        const navItems = document.querySelectorAll('.nav-item')
+        navItems.forEach(item => {
+            item.classList.remove('active')
+            if (item.dataset.page === page) {
+                item.classList.add('active')
+            }
+        })
     }
 }

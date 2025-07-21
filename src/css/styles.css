@@ -228,12 +228,12 @@ body {
 .transaction-description {
     font-weight: 600;
     color: var(--text-dark);
-    font-size: 1.1em;
+    font-size: 1em;
     margin-bottom: 2px;
 }
 
 .transaction-category-date {
-    font-size: 0.85em;
+    font-size: .85em;
     color: var(--text-light);
 }
 
@@ -412,6 +412,12 @@ body {
 
 /* Media queries para responsividad */
 @media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
     .container {
         margin: 15px auto;
         padding: 0 15px;
@@ -629,7 +635,7 @@ body {
     gap: 8px;
 }
 
-.action-btn {
+.transaction-action-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -639,18 +645,18 @@ body {
     transition: background-color 0.2s ease;
 }
 
-.action-btn.edit {
+.transaction-action-btn.edit {
     color: var(--primary-color);
 }
 
-.action-btn.delete {
+.transaction-action-btn.delete {
     color: var(--danger-color);
 }
 
-.action-btn:hover {
+.transaction-action-btn:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
-.action-btn.delete:hover {
+.transaction-action-btn.delete:hover {
     background-color: rgba(244, 67, 54, 0.1);
 }
 

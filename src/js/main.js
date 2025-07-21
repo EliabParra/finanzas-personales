@@ -13,7 +13,7 @@ class App {
         this.db = new DB('finanzas-personales')
         this.currentPage = LS.getItem('currentPage') || 'dashboard'
         this.header = new Header(this.handlePageChange.bind(this))
-        this.dashboard = new Dashboard()
+        this.dashboard = new Dashboard(this.handlePageChange.bind(this))
         this.transactions = new Transactions()
         this.categories = new Categories()
         this.budgets = new Budgets()
@@ -41,6 +41,7 @@ class App {
     async handlePageChange(page) {
         this.currentPage = page
         LS.setItem('currentPage', page)
+        this.header.updateActivePage(page)
         const mainContent = document.querySelector('.main-content')
         if (!mainContent) return
 
