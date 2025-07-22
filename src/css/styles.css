@@ -1759,112 +1759,101 @@ body {
 
 /* ALERTA GRANDE Y TEMA HUNGER GAMES (reforzado) */
 .alert {
-    position: fixed !important;
-    top: 60px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 4000 !important;
-    background: rgba(20, 20, 20, 0.98) !important;
-    border: 4px solid #FFD700 !important;
-    box-shadow: 0 0 48px 16px #FFD700, 0 0 64px 24px #FF9800 !important;
-    color: #FFD700 !important;
-    font-family: 'Orbitron', sans-serif !important;
-    font-size: 2em !important;
-    font-weight: bold !important;
-    padding: 32px 64px !important;
-    border-radius: 24px !important;
-    text-align: center !important;
-    letter-spacing: 2px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 32px !important;
-    max-width: 95vw !important;
-    min-width: 420px !important;
-    pointer-events: auto !important;
-    opacity: 0.99 !important;
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4000;
+    background: rgba(20, 20, 20, 0.98);
+    border: 4px solid #FFD700;
+    box-shadow: 0 0 48px 16px #FFD700, 0 0 64px 24px #FF9800;
+    color: #FFD700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 32px 64px;
+    border-radius: 24px;
+    text-align: center;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    max-width: 95vw;
+    min-width: 420px;
+    pointer-events: auto;
+    opacity: 0.99;
 }
 .alert .alert-icon {
-    font-size: 2.2em !important;
+    font-size: 2.2em;
 }
 .alert button {
-    background: none !important;
-    border: none !important;
-    color: #FFD700 !important;
-    font-size: 2.2em !important;
-    font-weight: bold !important;
-    cursor: pointer !important;
-    margin-left: 24px !important;
-    transition: color 0.2s !important;
+    background: none;
+    border: none;
+    color: #FFD700;
+    font-size: 2.2em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 24px;
+    transition: color 0.2s;
 }
 .alert button:hover {
-    color: #FF9800 !important;
+    color: #FF9800;
 }
 @media (max-width: 600px) {
     .alert {
-        font-size: 1.2em !important;
-        padding: 18px 8px !important;
-        min-width: 0 !important;
-        max-width: 99vw !important;
-        gap: 12px !important;
+        font-size: 1.2em;
+        padding: 18px 8px;
+        min-width: 0;
+        max-width: 99vw;
+        gap: 12px;
     }
     .alert button {
-        font-size: 1.5em !important;
-        margin-left: 10px !important;
+        font-size: 1.5em;
+        margin-left: 10px;
     }
 }
 
 /* BOTONES DEL MODAL SIEMPRE VISIBLES Y GRANDES */
-.modal-actions {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 32px !important;
-    margin-top: 32px !important;
+.modal-content .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
 }
-.modal-actions button {
-    font-size: 1.4em !important;
-    padding: 16px 36px !important;
-    border-radius: 12px !important;
-    font-weight: bold !important;
-    background: linear-gradient(90deg, #FFD700 60%, #FF9800 100%) !important;
-    color: #222 !important;
-    border: 2.5px solid #FFD700 !important;
-    box-shadow: 0 0 12px 2px #FFD70055 !important;
-    cursor: pointer !important;
+.modal-content .modal-actions button {
+    font-size: 1.4em;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #FFD700 60%, #FF9800 100%);
+    color: #222;
+    border: 2.5px solid #FFD700;
+    box-shadow: 0 0 12px 2px #FFD70055;
+    cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
-.modal-actions button.btn-cancel {
-    background: #222 !important;
-    color: #FFD700 !important;
-    border: 2.5px solid #FFD700 !important;
+.modal-content .modal-actions button.btn-cancel {
+    background: #222;
+    color: #FFD700;
+    border: 2.5px solid #FFD700;
 }
-.modal-actions button:hover {
-    background: linear-gradient(90deg, #FF9800 60%, #FFD700 100%) !important;
-    color: #fff !important;
+.modal-content .modal-actions button:hover {
+    background: linear-gradient(90deg, #FF9800 60%, #FFD700 100%);
+    color: #fff;
 }
 
 /* MODAL SOLO VISIBLE CON .show */
 .modal-overlay {
-    display: none !important;
+    display: none;
 }
 .modal-overlay.show {
-    display: flex !important;
+    display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed !important;
+    position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.7) !important;
-    z-index: 3000 !important;
-}
-
-/* Asegura que el contenido del modal no se corte */
-.modal-content {
-    min-width: 320px;
-    max-width: 480px;
-    min-height: 180px;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 32px 24px 24px 24px;
-    border-radius: 18px;
+    background: rgba(0,0,0,0.7);
+    z-index: 3000;
 }
 
 /* MODAL MÁS COMPACTO Y ESTÉTICO */
@@ -1879,5 +1868,5 @@ body {
 }
 
 .modal-actions {
-    margin-top: 24px !important;
+    margin-top: 24px;
 }
