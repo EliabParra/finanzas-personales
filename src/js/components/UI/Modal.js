@@ -1,10 +1,18 @@
+import { CategoriesService } from "../../services/CategoriesService.js"
+import { UIService } from "../../services/UIService.js"
+import { Alerts } from "./Alerts.js"
+
 export class Modal {
-    constructor(type, page) {
+    constructor(type, page, onSubmit) {
         this.type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()
         this.page = page
+        this.onSubmit = onSubmit
     }
 
     async render() {
+        const categories = await CategoriesService.getCategories()
+
+        this.currentDate = UIService.getCurrentDate()
         this.modal = document.createElement('div')
         this.modal.className = 'modal-overlay'
         this.modal.id = this.type + 'Modal'
@@ -48,94 +56,105 @@ export class Modal {
             case 'transaction':
                 form.innerHTML = `
                     <div class="form-group">
-                        <label for="transactionType">Tipo de Transacción</label>
+                        <label for="type">Tipo de Transacción</label>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="transactionType" value="income" checked> Ingreso
+                                <input type="radio" name="type" value="income" required> 
+                                Ingreso
                             </label>
                             <label>
-                                <input type="radio" name="transactionType" value="expense"> Egreso
+                                <input type="radio" name="type" value="expense" required> 
+                                Egreso
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="amount">Monto</label>
-                        <input type="number" id="amount" placeholder="Ej: 50.00" step="0.01" required>
+                        <input type="number" name="amount" id="amount" placeholder="Ej: 50.00" step="0.01" required value="">
                     </div>
                     <div class="form-group">
                         <label for="date">Fecha</label>
-                        <input type="date" id="date" value="2025-07-11" required>
+                        <input type="date" name="date" id="date" value="${this.currentDate}" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Categoría</label>
-                        <select id="category" required>
+                        <select id="category" name="categoryId" required>
                             <option value="">Selecciona una categoría</option>
-                            <option value="alimentacion">Alimentación</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="ocio">Ocio</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="salud">Salud</option>
-                            <option value="educacion">Educación</option>
-                            <option value="otros">Otros</option>
-                            <!-- Las categorías personalizadas se añadirían aquí dinámicamente -->
+                            ${categories.map(category => `
+                                <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Descripción (opcional)</label>
-                        <input type="text" id="description" placeholder="Ej: Cena con amigos">
+                        <input type="text" name="description" id="description" placeholder="Ej: Cena con amigos" value="">
                     </div>
+                    <input type="hidden" id="transactionId" name="id">
                 `
                 title.innerHTML = `Nueva Transacción 💸`
                 break
             case 'category':
                 form.innerHTML = `
-                    <input type="hidden" id="categoryId"> <!-- Para almacenar el ID de la categoría a editar -->
                     <div class="form-group">
                         <label for="categoryName">Nombre de la Categoría</label>
-                        <input type="text" id="categoryName" placeholder="Ej: Café, Gimnasio" required>
+                        <input type="text" id="categoryName" name="name" placeholder="Ej: Café, Gimnasio" required>
                     </div>
                     <div class="form-group">
-                        <label for="categoryIcon">Icono (Clase de Font Awesome)</label>
-                        <input type="text" id="categoryIcon" placeholder="Ej: fa-coffee, fa-dumbbell">
-                        <small style="color: var(--text-light); font-size: 0.8em;">Busca iconos en <a href="https://fontawesome.com/icons" target="_blank" style="color: var(--primary-color); text-decoration: none;">Font Awesome</a> (ej: "fa-utensils")</small>
+                        <label for="categoryIcon">Emoji</label>
+                        <input type="text" id="categoryIcon" name="icon" placeholder="Ej: ☕, 🏋️‍♂️">
                     </div>
                     <div class="form-group">
                         <label for="categoryColor">Color</label>
-                        <input type="color" id="categoryColor" value="#6a6ee0"> <!-- Color por defecto -->
+                        <input type="color" id="categoryColor" name="color" value="#6a6ee0">
                     </div>
+                    <input type="hidden" id="categoryId" name="id">
                 `
                 title.innerHTML = `Nueva Categoría ➕`
                 break
             case 'budget':
                 form.innerHTML = `
-                    <input type="hidden" id="budgetId"> <!-- Para almacenar el ID del presupuesto a editar -->
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="type" value="income" required>
+                                Ingreso
+                            </label>
+                            <label>
+                                <input type="radio" name="type" value="expense" required>
+                                Egreso
+                            </label>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="budgetCategory">Categoría</label>
-                        <select id="budgetCategory" required>
+                        <select id="budgetCategory" name="categoryId" required>
                             <option value="">Selecciona una categoría</option>
-                            <!-- Las categorías se cargarán aquí dinámicamente -->
-                            <option value="alimentacion">Alimentación</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="ocio">Ocio</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="salud">Salud</option>
-                            <option value="educacion">Educación</option>
-                            <option value="otros">Otros</option>
-                            <option value="entretenimiento">Entretenimiento</option>
+                            ${categories.map(category => `
+                                <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="budgetLimit">Monto Límite</label>
-                        <input type="number" id="budgetLimit" placeholder="Ej: 200.00" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="budgetPeriod">Periodo</label>
-                        <select id="budgetPeriod" required>
-                            <option value="mensual">Mensual</option>
-                            <option value="semanal">Semanal</option>
-                            <option value="anual">Anual</option>
+                        <label for="budgetMonth">Mes</label>
+                        <select id="budgetMonth" name="month" required>
+                            <option value="">Selecciona un mes</option>
+                            ${Array.from({ length: 12 }, (_, i) => `
+                                <option value="${i + 1}" ${i + 1 === UIService.getCurrentMonth() ? 'selected' : ''}>
+                                    ${UIService.getMonthName(i + 1)}
+                                </option>
+                            `).join('')}
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="budgetYear">Año</label>
+                        <input type="number" id="budgetYear" name="year" min="2020" max="2100" required value="${UIService.getCurrentYear()}">
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetLimit">Monto</label>
+                        <input type="number" id="budgetLimit" name="limit" placeholder="Ej: 200.00" step="0.01" required>
+                    </div>
+                    <input type="hidden" id="budgetId" name="id">
                 `
                 title.innerHTML = `Nuevo Presupuesto 💸`
                 break
@@ -152,8 +171,52 @@ export class Modal {
         this.modal.addEventListener('click', e => {
             if (e.target === this.modal) this.closeModal()
         })
+        submitBtn.addEventListener('click', e => this.handleSubmit(e))
 
         return this.modal
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault()
+        const data = Object.fromEntries(
+            new FormData(e.target.form)
+        )
+
+        // Validación de campos requeridos
+        let invalid = false
+        let message = ''
+        switch (this.type.toLowerCase()) {
+            case 'transaction':
+                if (!data.type || !data.amount || !data.date || !data.categoryId) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios de la transacción.'
+                }
+                break
+            case 'category':
+                if (!data.name) {
+                    invalid = true
+                    message = 'El nombre de la categoría es obligatorio.'
+                }
+                break
+            case 'budget':
+                if (!data.type || !data.categoryId || !data.month || !data.year || !data.limit) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios del presupuesto.'
+                }
+                break
+        }
+        if (invalid) {
+            Alerts.showAlert('danger', message)
+            return
+        }
+
+        try {
+            await this.onSubmit(data)
+            UIService.updateData()
+            this.closeModal()
+        } catch (error) {
+            Alerts.showAlert('danger', `Error al guardar el ${this.type}: ${error.message}`)
+        }
     }
 
     openModal() {
@@ -162,5 +225,34 @@ export class Modal {
 
     closeModal() {
         this.modal.classList.remove('show')
+        this.clearData()
+    }
+
+    setData(data) {
+        this.modal.querySelectorAll('input').forEach(input => {
+            if (input.name in data && input.type !== 'radio') input.value = data[input.name]
+            if (input.type === 'radio') input.checked = input.value === data[input.name]
+        })
+        this.modal.querySelectorAll('select').forEach(select => {
+            if (select.name in data) {
+                select.value = data[select.name]
+            }
+        })
+    }
+
+    clearData() {
+        // Resetea el formulario completo si existe
+        const form = this.modal.querySelector('form');
+        if (form) form.reset();
+
+        // Lógica especial para campos personalizados
+        this.modal.querySelectorAll('input, select').forEach(input => {
+            if (input.type !== 'radio') input.value = '';
+            if (input.type === 'radio') input.checked = false;
+            if (input.type === 'color') input.value = '#6a6ee0';
+            if (input.type === 'date') input.value = this.currentDate;
+            if (input.name === 'year') input.value = UIService.getCurrentYear();
+            if (input.name === 'month') input.value = UIService.getCurrentMonth();
+        });
     }
 }
