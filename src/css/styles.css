@@ -1645,16 +1645,6 @@ body {
     }
 }
 
-/* --- MEJORAS EN EL TEMA DE LOS JUEGOS DEL HAMBRE --- */
-
-/*
-body {
-    /* More detailed Mockingjay emblem SVG as background *
-    background-image: url('data:image/svg+xml;utf8,<svg width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg"><circle cx="160" cy="160" r="140" fill="none" stroke="gold" stroke-width="12"/><g><path d="M160 70 Q200 120 270 120 Q220 170 270 270 Q160 230 160 320 Q160 230 50 270 Q100 170 50 120 Q120 120 160 70 Z" fill="gold" stroke="orange" stroke-width="6"/></g><g><path d="M160 120 Q180 140 210 130 Q200 160 220 180 Q190 170 170 200 Q180 170 150 160 Q170 150 160 120 Z" fill="#fff8c0" stroke="orange" stroke-width="3"/></g><g><rect x="140" y="150" width="120" height="12" rx="6" fill="gold" transform="rotate(-30 200 156)"/><polygon points="250,156 270,150 250,162" fill="orange"/></g></svg>');
-    background-repeat: repeat;
-    background-size: 420px 420px;
-}*/
-
 :root {
     --hg-gold: #FFD700;
     --hg-black: #1a1a1a;
