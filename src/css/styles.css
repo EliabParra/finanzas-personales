@@ -1756,3 +1756,117 @@ body {
     border: 2px solid var(--hg-gold);
     box-shadow: 0 0 8px var(--hg-gold);
 }
+
+/* ALERTA GRANDE Y TEMA HUNGER GAMES (reforzado) */
+.alert {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4000;
+    background: rgba(20, 20, 20, 0.98);
+    border: 4px solid #FFD700;
+    box-shadow: 0 0 48px 16px #FFD700, 0 0 64px 24px #FF9800;
+    color: #FFD700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 32px 64px;
+    border-radius: 24px;
+    text-align: center;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    max-width: 95vw;
+    min-width: 420px;
+    pointer-events: auto;
+    opacity: 0.99;
+}
+.alert .alert-icon {
+    font-size: 2.2em;
+}
+.alert button {
+    background: none;
+    border: none;
+    color: #FFD700;
+    font-size: 2.2em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 24px;
+    transition: color 0.2s;
+}
+.alert button:hover {
+    color: #FF9800;
+}
+@media (max-width: 600px) {
+    .alert {
+        font-size: 1.2em;
+        padding: 18px 8px;
+        min-width: 0;
+        max-width: 99vw;
+        gap: 12px;
+    }
+    .alert button {
+        font-size: 1.5em;
+        margin-left: 10px;
+    }
+}
+
+/* BOTONES DEL MODAL SIEMPRE VISIBLES Y GRANDES */
+.modal-content .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
+}
+.modal-content .modal-actions button {
+    font-size: 1.4em;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #FFD700 60%, #FF9800 100%);
+    color: #222;
+    border: 2.5px solid #FFD700;
+    box-shadow: 0 0 12px 2px #FFD70055;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.modal-content .modal-actions button.btn-cancel {
+    background: #222;
+    color: #FFD700;
+    border: 2.5px solid #FFD700;
+}
+.modal-content .modal-actions button:hover {
+    background: linear-gradient(90deg, #FF9800 60%, #FFD700 100%);
+    color: #fff;
+}
+
+/* MODAL SOLO VISIBLE CON .show */
+.modal-overlay {
+    display: none;
+}
+.modal-overlay.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 3000;
+}
+
+/* MODAL MÁS COMPACTO Y ESTÉTICO */
+.modal-content {
+    min-width: 320px;
+    max-width: 480px;
+    min-height: 180px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 32px 24px 24px 24px;
+    border-radius: 18px;
+}
+
+.modal-actions {
+    margin-top: 24px;
+}

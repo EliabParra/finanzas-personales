@@ -1,5 +1,6 @@
 import { CategoriesService } from "../../services/CategoriesService.js"
 import { UIService } from "../../services/UIService.js"
+import { Alerts } from "./Alerts.js"
 
 export class Modal {
     constructor(type, page, onSubmit) {
@@ -181,12 +182,40 @@ export class Modal {
             new FormData(e.target.form)
         )
 
+        // Validación de campos requeridos
+        let invalid = false
+        let message = ''
+        switch (this.type.toLowerCase()) {
+            case 'transaction':
+                if (!data.type || !data.amount || !data.date || !data.categoryId) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios de la transacción.'
+                }
+                break
+            case 'category':
+                if (!data.name) {
+                    invalid = true
+                    message = 'El nombre de la categoría es obligatorio.'
+                }
+                break
+            case 'budget':
+                if (!data.type || !data.categoryId || !data.month || !data.year || !data.limit) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios del presupuesto.'
+                }
+                break
+        }
+        if (invalid) {
+            Alerts.showAlert('danger', message)
+            return
+        }
+
         try {
             await this.onSubmit(data)
             UIService.updateData()
             this.closeModal()
         } catch (error) {
-            throw new Error(`Error al guardar el ${this.type}: ${error.message}`)
+            Alerts.showAlert('danger', `Error al guardar el ${this.type}: ${error.message}`)
         }
     }
 
@@ -212,13 +241,18 @@ export class Modal {
     }
 
     clearData() {
+        // Resetea el formulario completo si existe
+        const form = this.modal.querySelector('form');
+        if (form) form.reset();
+
+        // Lógica especial para campos personalizados
         this.modal.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'radio') input.value = ''
-            if (input.type === 'radio') input.checked = false
-            if (input.type === 'color') input.value = '#6a6ee0'
-            if (input.type === 'date') input.value = this.currentDate
-            if (input.name === 'year') input.value = UIService.getCurrentYear()
-            if (input.name === 'month') input.value = UIService.getCurrentMonth()
-        })
+            if (input.type !== 'radio') input.value = '';
+            if (input.type === 'radio') input.checked = false;
+            if (input.type === 'color') input.value = '#6a6ee0';
+            if (input.type === 'date') input.value = this.currentDate;
+            if (input.name === 'year') input.value = UIService.getCurrentYear();
+            if (input.name === 'month') input.value = UIService.getCurrentMonth();
+        });
     }
 }
