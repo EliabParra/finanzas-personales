@@ -244,13 +244,18 @@ export class Modal {
     }
 
     clearData() {
+        // Resetea el formulario completo si existe
+        const form = this.modal.querySelector('form');
+        if (form) form.reset();
+
+        // Lógica especial para campos personalizados
         this.modal.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'radio') input.value = ''
-            if (input.type === 'radio') input.checked = false
-            if (input.type === 'color') input.value = '#6a6ee0'
-            if (input.type === 'date') input.value = this.currentDate
-            if (input.name === 'year') input.value = UIService.getCurrentYear()
-            if (input.name === 'month') input.value = UIService.getCurrentMonth()
-        })
+            if (input.type !== 'radio') input.value = '';
+            if (input.type === 'radio') input.checked = false;
+            if (input.type === 'color') input.value = '#6a6ee0';
+            if (input.type === 'date') input.value = this.currentDate;
+            if (input.name === 'year') input.value = UIService.getCurrentYear();
+            if (input.name === 'month') input.value = UIService.getCurrentMonth();
+        });
     }
 }
