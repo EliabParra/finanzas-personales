@@ -1911,7 +1911,7 @@ font-size: 1em;
     box-shadow: 0 0 8px var(--hg-gold);
 }
 
-/* ALERTA GRANDE Y TEMA HUNGER GAMES (reforzado) */
+/* ALERTA MÁS PEQUEÑA, COMPACTA Y ADAPTABLE */
 .alert {
     position: fixed;
     top: 60px;
@@ -1919,51 +1919,60 @@ font-size: 1em;
     transform: translateX(-50%);
     z-index: 4000;
     background: rgba(20, 20, 20, 0.98);
-    border: 4px solid #FFD700;
-    box-shadow: 0 0 48px 16px #FFD700, 0 0 64px 24px #FF9800;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 10px 2px #FFD700, 0 0 16px 4px #FF9800;
     color: #FFD700;
     font-family: 'Orbitron', sans-serif;
-    font-size: 2em;
+    font-size: 0.9em;
     font-weight: bold;
-    padding: 32px 64px;
-    border-radius: 24px;
+    padding: 4px 8px;
+    border-radius: 8px;
     text-align: center;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     display: flex;
     align-items: center;
-    gap: 32px;
-    max-width: 95vw;
-    min-width: 420px;
+    gap: 4px;
+    max-width: 70vw;
+    min-width: 80px;
+    width: auto;
     pointer-events: auto;
     opacity: 0.99;
+    flex-direction: row;
+    word-break: break-word;
+    white-space: pre-line;
 }
 .alert .alert-icon {
-    font-size: 2.2em;
+    font-size: 1em;
 }
 .alert button {
     background: none;
     border: none;
     color: #FFD700;
-    font-size: 2.2em;
+    font-size: 1em;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 24px;
+    margin-left: 4px;
     transition: color 0.2s;
+    align-self: center;
+    padding: 0 2px;
 }
 .alert button:hover {
     color: #FF9800;
 }
 @media (max-width: 600px) {
     .alert {
-        font-size: 1.2em;
-        padding: 18px 8px;
+        font-size: 0.85em;
+        padding: 3px 2px;
         min-width: 0;
-        max-width: 99vw;
-        gap: 12px;
+        max-width: 95vw;
+        gap: 2px;
+    }
+    .alert .alert-icon {
+        font-size: 0.9em;
     }
     .alert button {
-        font-size: 1.5em;
-        margin-left: 10px;
+        font-size: 0.9em;
+        margin-left: 2px;
     }
 }
 
@@ -2008,6 +2017,22 @@ font-size: 1em;
     top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.7);
     z-index: 3000;
+}
+
+/* MODAL MÁS ADAPTABLE EN MÓVIL */
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 98vw;
+        width: 100%;
+        padding: 16px 6px;
+    }
+}
+@media (max-width: 480px) {
+    .modal-content {
+        max-width: 99vw;
+        width: 100%;
+        padding: 10px 2px;
+    }
 }
 
 /* MODAL MÁS COMPACTO Y ESTÉTICO */
