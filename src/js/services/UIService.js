@@ -1,3 +1,6 @@
+import { TransactionsService } from "./TransactionsService.js"
+import { BudgetsService } from "./BudgetsService.js"
+
 export class UIService {
     static getMonthName(month) {
         const months = [
@@ -38,5 +41,10 @@ export class UIService {
 
     static getCurrentMonthYear() {
         return `${this.getCurrentMonthName()} ${this.getCurrentYear()}`
+    }
+
+    static updateData() {
+        TransactionsService.updateBalance()
+        BudgetsService.updateMonthlySummary()
     }
 }

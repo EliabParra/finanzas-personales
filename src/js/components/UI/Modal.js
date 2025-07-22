@@ -1,6 +1,4 @@
 import { CategoriesService } from "../../services/CategoriesService.js"
-import { TransactionsService } from "../../services/TransactionsService.js"
-import { BudgetsService } from "../../services/BudgetsService.js"
 import { UIService } from "../../services/UIService.js"
 
 export class Modal {
@@ -185,8 +183,7 @@ export class Modal {
 
         try {
             await this.onSubmit(data)
-            TransactionsService.updateBalance()
-            BudgetsService.updateMonthlySummary()
+            UIService.updateData()
             this.closeModal()
         } catch (error) {
             throw new Error(`Error al guardar el ${this.type}: ${error.message}`)

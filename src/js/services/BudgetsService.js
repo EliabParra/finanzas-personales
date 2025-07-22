@@ -162,6 +162,8 @@ export class BudgetsService {
                     await this.getBudgets(), 
                     budgetsTable, budgetModal
                 )
+                await this.renderBudgetsByCategory(budgetsGrid, budgetModal)
+                await this.updateMonthlySummary()
             })
         })
     }
@@ -173,7 +175,19 @@ export class BudgetsService {
 
         const budgets = await this.getBudgets()
 
-        for (const b of budgets.sort((a, b) => new Date(a.year, a.month - 1) - new Date(b.year, b.month - 1))) {
+        // Agrupar y sumar presupuestos por categoria, mes, año y tipo
+        const grouped = {}
+        for (const b of budgets) {
+            const key = `${b.categoryId}_${b.month}_${b.year}_${b.type}`
+            if (!grouped[key]) {
+                grouped[key] = { ...b, limit: parseFloat(b.limit) }
+            } else {
+                grouped[key].limit += parseFloat(b.limit)
+            }
+        }
+
+        for (const key in grouped) {
+            const b = grouped[key]
             b.category = await CategoriesService.getCategory(b.categoryId)
 
             const transactions = await TransactionsService.getTransactions({
@@ -189,14 +203,14 @@ export class BudgetsService {
             let progress = 0
             let restante = 0
             if (b.type === 'expense') {
-                deviation = parseFloat(b.limit) - real
+                deviation = b.limit - real
                 restante = deviation
-                progress = Math.min(100, (real / parseFloat(b.limit)) * 100)
+                progress = b.limit > 0 ? Math.min(100, (real / b.limit) * 100) : 0
                 deviationClass = deviation < 0 ? 'progress-red' : 'progress-green'
             } else {
-                deviation = real - parseFloat(b.limit)
+                deviation = real - b.limit
                 restante = deviation
-                progress = Math.min(100, (real / parseFloat(b.limit)) * 100)
+                progress = b.limit > 0 ? Math.min(100, (real / b.limit) * 100) : 0
                 deviationClass = deviation < 0 ? 'progress-red' : 'progress-green'
             }
 
@@ -206,25 +220,25 @@ export class BudgetsService {
 
             budgetItem.innerHTML = `
                 <div class="budget-item-header">
-                    <div class="budget-category-icon" style="background-color: ${b.category.color};">
+                    <div class="budget-category-icon" style="background-color: ${b.category.color}">
                         ${b.category.icon}
                     </div>
                     <div class="budget-info">
-                        <div class="budget-category-name" style="color: ${b.category.color};">${b.category.name}</div>
+                        <div class="budget-category-name" style="color: ${b.category.color}">${b.category.name}</div>
                         <div class="budget-period">${UIService.getMonthName(b.month)} ${b.year}</div>
                         <div class="budget-type">${b.type === 'income' ? 'Ingreso' : 'Egreso'}</div>
                     </div>
                 </div>
                 <div class="budget-amounts">
-                <span class="budget-spent ${deviation < 0 ? 'red' : 'green'}">
-                    ${UIService.formatCurrency(real)}
-                </span>
-                <span class="budget-limit">
-                    de ${UIService.formatCurrency(b.limit)}
-                </span>
+                    <span class="budget-spent ${deviation < 0 ? 'red' : 'green'}">
+                        ${UIService.formatCurrency(real)}
+                    </span>
+                    <span class="budget-limit">
+                        de ${UIService.formatCurrency(b.limit)}
+                    </span>
                 </div>
                 <div class="budget-progress-bar-container">
-                    <div class="budget-progress-bar" style="width: ${progress}%;"></div>
+                    <div class="budget-progress-bar" style="width: ${progress}%"></div>
                 </div>
                 <div class="budget-progress-text">
                     <span class="${deviation < 0 ? 'red' : 'green'}">
@@ -246,6 +260,7 @@ export class BudgetsService {
             budgetsGrid.appendChild(budgetItem)
         }
 
+        // Eventos de edición y eliminación
         const editBudgetBtns = budgetsGrid.querySelectorAll('.budget-action-btn.edit')
         const deleteBudgetBtns = budgetsGrid.querySelectorAll('.budget-action-btn.delete')
 
@@ -260,12 +275,31 @@ export class BudgetsService {
 
         deleteBudgetBtns.forEach(deleteBudgetBtn => {
             deleteBudgetBtn.addEventListener('click', async () => {
-                const id = parseInt(deleteBudgetBtn.dataset.budgetId)
-                await this.deleteBudget(id)
+                const budgetId = parseInt(deleteBudgetBtn.dataset.budgetId)
+                const budget = await this.getBudget(budgetId)
+                // Buscar todos los presupuestos agrupados por la misma categoría, mes, año y tipo
+                const budgets = await this.getBudgets()
+                const toDelete = budgets.filter(b =>
+                    b.categoryId === budget.categoryId &&
+                    b.month === budget.month &&
+                    b.year === budget.year &&
+                    b.type === budget.type
+                )
+                // Eliminar todos los presupuestos encontrados
+                for (const b of toDelete) {
+                    await this.deleteBudget(b.id)
+                }
                 await this.renderBudgetsByCategory(budgetsGrid, budgetModal)
+                await this.renderAllBudgets(
+                    await this.getBudgets(),
+                    budgetsTable,
+                    budgetModal
+                )
+                await this.updateMonthlySummary()
             })
         })
     }
+
 
     static async updateMonthlySummary() {
         try {
