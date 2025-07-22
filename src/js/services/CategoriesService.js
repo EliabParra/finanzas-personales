@@ -1,13 +1,13 @@
 import DB from '../classes/DB.js'
 
 const DEFAULT_CATEGORIES = [
-    { name: 'Alimentación', icon: '☕', color: '#FF7043' },
-    { name: 'Transporte', icon: '🚌', color: '#AB47BC' },
-    { name: 'Ocio', icon: '📺', color: '#26C6DA' },
-    { name: 'Servicios', icon: '💻', color: '#FFCA28' },
-    { name: 'Salud', icon: '💊', color: '#EF5350' },
-    { name: 'Educación', icon: '🏫', color: '#7986CB' },
-    { name: 'Otros', icon: '…', color: '#9E9E9E' },
+    { name: 'Alimentación', icon: '☕', color: '#FFD700' },
+    { name: 'Transporte', icon: '🚌', color: '#FF9800' },
+    { name: 'Ocio', icon: '📺', color: '#FF5722' },
+    { name: 'Servicios', icon: '💻', color: '#D32F2F' },
+    { name: 'Salud', icon: '💊', color: '#4CAF50' },
+    { name: 'Educación', icon: '🏫', color: '#2196F3' },
+    { name: 'Otros', icon: '…', color: '#9C27B0' }
 ]
 
 export class CategoriesService {
@@ -36,7 +36,6 @@ export class CategoriesService {
             return categories
         } catch (error) {
             throw new Error(`Error al obtener categorías: ${error}`)
-            return []
         }
     }
 
@@ -46,8 +45,7 @@ export class CategoriesService {
             const category = await db.getItem(id)
             return category
         } catch (error) {
-            throw new Error(`Error al obtener categoría: ${error}`)
-            return {}
+            throw new Error(`Error al obtener categoría ${id}: ${error}`)
         }
     }
 
@@ -70,6 +68,15 @@ export class CategoriesService {
     }
 
     static async deleteCategory(id) {
+        const { TransactionsService } = await import('./TransactionsService.js')
+        const { BudgetsService } = await import('./BudgetsService.js')
+
+        const transactionsWithCategory = await TransactionsService.getTransactions({ category: id })
+        const budgetsWithCategory = await BudgetsService.getBudgetsByCategory(id)
+
+        if (transactionsWithCategory) transactionsWithCategory.forEach(async t => await TransactionsService.deleteTransaction(t.id))
+        if (budgetsWithCategory) budgetsWithCategory.forEach(async b => await BudgetsService.deleteBudget(b.id))
+
         try {
             const db = new DB('finanzas-personales', 'categories')
             await db.deleteItem(id)

@@ -61,7 +61,6 @@ export class Dashboard {
     }
 
     async renderTransactions() {
-        console.log('Renderizando transacciones')
         const transactionsList = this.dashboardPage.querySelector('.transactions-list')
         if (!transactionsList) return
         
