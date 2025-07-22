@@ -2,6 +2,7 @@ import { CategoriesService } from "../../services/CategoriesService.js"
 import { TransactionsService } from "../../services/TransactionsService.js"
 import { BudgetsService } from "../../services/BudgetsService.js"
 import { UIService } from "../../services/UIService.js"
+import { Alerts } from "./Alerts.js"
 
 export class Modal {
     constructor(type, page, onSubmit) {
@@ -183,13 +184,41 @@ export class Modal {
             new FormData(e.target.form)
         )
 
+        // Validación de campos requeridos
+        let invalid = false
+        let message = ''
+        switch (this.type.toLowerCase()) {
+            case 'transaction':
+                if (!data.type || !data.amount || !data.date || !data.categoryId) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios de la transacción.'
+                }
+                break
+            case 'category':
+                if (!data.name) {
+                    invalid = true
+                    message = 'El nombre de la categoría es obligatorio.'
+                }
+                break
+            case 'budget':
+                if (!data.type || !data.categoryId || !data.month || !data.year || !data.limit) {
+                    invalid = true
+                    message = 'Por favor, completa todos los campos obligatorios del presupuesto.'
+                }
+                break
+        }
+        if (invalid) {
+            Alerts.showAlert('danger', message)
+            return
+        }
+
         try {
             await this.onSubmit(data)
-            TransactionsService.updateBalance()
-            BudgetsService.updateMonthlySummary()
+            TransactionsService.updateBalance && TransactionsService.updateBalance()
+            BudgetsService.updateMonthlySummary && BudgetsService.updateMonthlySummary()
             this.closeModal()
         } catch (error) {
-            throw new Error(`Error al guardar el ${this.type}: ${error.message}`)
+            Alerts.showAlert('danger', `Error al guardar el ${this.type}: ${error.message}`)
         }
     }
 

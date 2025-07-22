@@ -100,6 +100,7 @@ export class Dashboard {
     }
 
     async handleSubmit(data) {
+        // Solo procesar si los datos ya han sido validados por Modal
         data.amount = parseFloat(data.amount)
         const category = await CategoriesService.getCategory(parseInt(data.categoryId))
         data.categoryId = category.id
