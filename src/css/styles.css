@@ -29,10 +29,6 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Fondo con imagen sutil o patrón */
-    /*background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%232b2b2b" fill-opacity="0.25"%3E%3Cpath d="M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4H0v-1h96v-4h4v1h-4v4zm-10 0h6v1h-6v-1zM96 4h4v1h-4v4h-1V5h-9v4h-1V5H0V4h96V0h4v1h-4v4zm-10 0h6v1h-6V4zM96 45h4v1h-4v4h-1v-4h-9v4h-1v-4H0v-1h96v-4h4v1h-4v4zm-10 0h6v1h-6v-1zM96 24h4v1h-4v4h-1v-4h-9v4h-1v-4H0v-1h96v-4h4v1h-4v4zm-10 0h6v1h-6v-1zM96 75h4v1h-4v4h-1v-4h-9v4h-1v-4H0v-1h96v-4h4v1h-4v4zm-10 0h6v1h-6v-1zM24 0h1v96h4v4h-1v-4h-4V0zm25 0h1v96h4v4h-1v-4h-4V0zm49 0h1v96h4v4h-1v-4h-4V0zM0 0h1v96h4v4H1V0zm74 0h1v96h4v4h-1v-4h-4V0zM49 45h1v6h-1v-6zm-24 0h1v6h-1v-6zm24 25h1v6h-1v-6zm24 0h1v6h-1v-6zM24 70h1v6h-1v-6zm49 0h1v6h-1v-6zM24 20h1v6h-1v-6zm49 0h1v6h-1v-6zm24 0h1v6h-1v-6zM49 95h1v4h-1v-4zM24 95h1v4h-1v-4zM74 95h1v4h-1v-4zM49 20h1v6h-1v-6zM74 20h1v6h-1v-6zM24 45h1v6h-1v-6zM74 45h1v6h-1v-6z'/%3E%3C/g%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 100px 100px;*/
 }
 
 .container {
@@ -53,7 +49,9 @@ body {
     overflow: hidden;
     border: 1px solid var(--border-color); /* Borde sutil */
     position: relative; /* Para posibles detalles gráficos */
-    transform: perspective(1px) translateZ(0); /* Para suavizar animaciones */
+    transform: perspective(1px) translateZ(0);
+    margin-bottom: 30px;
+    transition: all .2s ease;
 }
 
 .card::before {
@@ -119,43 +117,44 @@ body {
 }
 
 /* Navegación principal */
-.main-nav {
-    background-color: var(--card-background);
-    padding: 20px;
-    border-radius: var(--border-radius-soft);
-    box-shadow: 0 6px 20px var(--shadow-dark);
-    margin-bottom: 30px;
+.header {
+    width: 100%;
+    background: rgba(20, 20, 20, 0.92);
+    color: var(--hg-gold);
+    position: relative;
+    padding: 24px 0 18px 0;
+    box-shadow: 0 4px 18px 0 rgba(0,0,0,0.25), 0 1.5px 0 var(--hg-gold);
+    border-bottom: 2.5px solid var(--hg-gold);
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    border: 1px solid var(--border-color);
+    gap: 18px;
 }
 
-.nav-item {
-    text-decoration: none;
-    color: var(--text-dark);
+.header .nav-item {
+    color: var(--hg-gold);
+    background: none;
+    font-size: 1.15em;
     font-family: var(--font-family-title);
-    font-weight: 600;
-    padding: 12px 20px;
-    border-radius: var(--border-radius-sharp);
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 10px 22px;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    transition: all 0.2s;
 }
 
-.nav-item i {
-    font-size: 1.4em; /* Aumenta el tamaño de los iconos */
+.header .nav-item.active, .header .nav-item:hover {
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%);
+    color: var(--hg-black);
+    box-shadow: 0 2px 12px var(--hg-gold);
 }
 
 .nav-item.active,
 .nav-item:hover {
     background-color: var(--primary-color);
-    color: white; /* Blanco puro para contraste */
-    transform: scale(1.05); /* Pequeño efecto de escala */
-}
+    color: white; 
+    transform: scale(1.05); 
+} 
 
 /* Estilos específicos del Dashboard */
 .summary-grid {
@@ -199,11 +198,11 @@ body {
     color: var(--text-light);
 }
 
-.summary-amount.income {
+.summary-amount.income, .green {
     color: var(--success-color);
 }
 
-.summary-amount.expense {
+.summary-amount.expense, .red {
     color: var(--danger-color);
 }
 
@@ -1328,14 +1327,6 @@ body {
     font-weight: 600;
 }
 
-.budget-limit {
-    color: var(--text-dark);
-}
-
-.budget-spent {
-    color: var(--danger-color); /* Por defecto para gastos */
-}
-
 .budget-progress-bar-container {
     width: 100%;
     background-color: var(--background-light);
@@ -1674,7 +1665,7 @@ body {
 
 /* Tarjeta y brillo dorado modal */
 .card, .modal-content {
-    border: 2px solid var(--hg-gold) !important;
+    border: 2px solid var(--hg-gold);
     box-shadow: 0 0 16px 2px var(--hg-gold), 0 0 32px 4px var(--hg-flame2), 0 8px 25px var(--shadow-dark);
     position: relative;
 }
@@ -1687,21 +1678,21 @@ body {
 /* Encabezados de sección con sombra de texto dorada */
 .card-title, .modal-title, .main-nav, .summary-label {
     text-shadow: 0 2px 8px var(--hg-gold), 0 0 2px var(--hg-flame2);
-    color: var(--hg-gold) !important;
+    color: var(--hg-gold);
     letter-spacing: 2px;
 }
 
 /* Botones con detalles dorados y llamas */
 .btn {
     background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%);
-    color: var(--hg-black) !important;
+    color: var(--hg-black);
     border: 2px solid var(--hg-gold);
     box-shadow: 0 2px 8px var(--hg-gold);
     text-shadow: 0 1px 2px #fff8;
 }
 .btn:hover {
     background: linear-gradient(90deg, var(--hg-flame2) 0%, var(--hg-gold) 100%);
-    color: #fff !important;
+    color: #fff;
     border-color: var(--hg-flame2);
     box-shadow: 0 0 16px var(--hg-flame2), 0 2px 8px var(--hg-gold);
 }
@@ -1740,12 +1731,12 @@ body {
 /* Efectos al pasar el cursor con transiciones doradas/llameantes */
 .card:hover, .modal-content:hover {
     box-shadow: 0 0 32px 8px var(--hg-gold), 0 0 48px 12px var(--hg-flame2), 0 8px 25px var(--shadow-dark);
-    border-color: var(--hg-flame2) !important;
+    border-color: var(--hg-flame2);
 }
 
 .nav-item.active, .nav-item:hover {
-    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%) !important;
-    color: var(--hg-black) !important;
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%);
+    color: var(--hg-black);
     text-shadow: 0 2px 8px var(--hg-gold);
 }
 
@@ -1774,39 +1765,4 @@ body {
 .data-table, .transactions-table {
     border: 2px solid var(--hg-gold);
     box-shadow: 0 0 8px var(--hg-gold);
-}
-
-/* Fin de las mejoras del tema de Los juegos del hambre */
-
-/* Visibilidad del encabezado y corrección del estilo */
-.header {
-    width: 100%;
-    background: rgba(20, 20, 20, 0.92); /* Oscuro semitransparente para contraste */
-    color: var(--hg-gold);
-    z-index: 2000;
-    position: relative;
-    padding: 24px 0 18px 0;
-    box-shadow: 0 4px 18px 0 rgba(0,0,0,0.25), 0 1.5px 0 var(--hg-gold);
-    border-bottom: 2.5px solid var(--hg-gold);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
-}
-
-.header .nav-item {
-    color: var(--hg-gold) !important;
-    background: none !important;
-    font-size: 1.15em;
-    font-family: var(--font-family-title);
-    font-weight: 700;
-    border-radius: 8px;
-    padding: 10px 22px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.header .nav-item.active, .header .nav-item:hover {
-    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%) !important;
-    color: var(--hg-black) !important;
-    box-shadow: 0 2px 12px var(--hg-gold);
 }

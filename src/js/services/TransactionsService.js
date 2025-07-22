@@ -1,17 +1,18 @@
 import DB from './../classes/DB.js'
 import { CategoriesService } from './CategoriesService.js'
+import { UIService } from './UIService.js'
 
 export class TransactionsService {
     static async getTransactions(filters = {}) {
         try {
             const db = new DB('finanzas-personales', 'transactions')
             let transactions = await db.getAllItems()
-            
+
             if (filters.type) {
                 transactions = transactions.filter(t => t.type === filters.type)
             }
             if (filters.category) {
-                transactions = transactions.filter(t => t.category === filters.category)
+                transactions = transactions.filter(t => t.categoryId === filters.category)
             }
             if (filters.startDate) {
                 transactions = transactions.filter(t => t.date >= filters.startDate)
@@ -21,6 +22,19 @@ export class TransactionsService {
             }
             if (filters.description) {
                 transactions = transactions.filter(t => t.description.toLowerCase().includes(filters.description.toLowerCase()))
+            }
+            if (filters.month && filters.year) {
+                transactions = transactions.filter(t => {
+                    const [year, month] = t.date.split('-')
+                    return parseInt(month) === parseInt(filters.month) && parseInt(year) === parseInt(filters.year)
+                })
+            } else if (filters.year) {
+                transactions = transactions.filter(t => t.date.startsWith(filters.year))
+            } else if (filters.month) {
+                transactions = transactions.filter(t => {
+                    const [, month] = t.date.split('-')
+                    return parseInt(month) === parseInt(filters.month)
+                })
             }
 
             return transactions
@@ -68,24 +82,48 @@ export class TransactionsService {
         }
     }
 
-    static async updateBalance(transactions) {
+    static async getTransactionsByCategoryAndMonth(categoryId, month = UIService.getCurrentMonth(), year = UIService.getCurrentYear()) {
+        const transactions = await this.getTransactions()
+        return transactions.filter(t => t.categoryId === categoryId && t.date.startsWith(`${year}-${month}`))
+    }
+
+    static async getTransactionsOfCurrentMonth() {
+        const currentMonth = UIService.getCurrentMonth()
+        const currentYear = UIService.getCurrentYear()
+        const currentDate = UIService.getCurrentDate()
+        const filters = { startDate: `${currentYear}-${currentMonth}-01`, endDate: currentDate }
+        return await this.getTransactions(filters)
+    }
+
+    static async getTransactionsOfLast30Days() {
+        let transactions = await TransactionsService.getTransactions()
+        return transactions.filter(t => Date.parse(t.date) >= Date.now() - 30 * 24 * 60 * 60 * 1000)
+    }
+
+    static async updateBalance() {
         try {
             let balance = 0
             let income = 0
             let expense = 0
 
-            transactions.forEach(t => {
-                if (t.type === 'income') {income += parseFloat(t.amount); balance += parseFloat(t.amount)}
-                else {expense += parseFloat(t.amount); balance -= parseFloat(t.amount)}
+            const transactionsOfLast30Days = await this.getTransactionsOfLast30Days()
+            transactionsOfLast30Days.forEach(t => {
+                if (t.type === 'income') income += parseFloat(t.amount)
+                else expense += parseFloat(t.amount)
+            })
+
+            const globalTransactions = await this.getTransactions()
+            globalTransactions.forEach(t => {
+                balance += t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)
             })
 
             const balanceSpan = document.querySelector('.summary-balance .summary-amount')
             const incomeSpan = document.querySelector('.summary-income .summary-amount')
             const expenseSpan = document.querySelector('.summary-expense .summary-amount')
 
-            if (balanceSpan) balanceSpan.innerHTML = `${this.formatCurrency(balance)}`
-            if (incomeSpan) incomeSpan.innerHTML = `${this.formatCurrency(income)}`
-            if (expenseSpan) expenseSpan.innerHTML = `${this.formatCurrency(expense)}`
+            if (balanceSpan) balanceSpan.innerHTML = `${UIService.formatCurrency(balance)}`
+            if (incomeSpan) incomeSpan.innerHTML = `${UIService.formatCurrency(income)}`
+            if (expenseSpan) expenseSpan.innerHTML = `${UIService.formatCurrency(expense)}`
         } catch (error) {
             throw new Error(`Error al actualizar balance: ${error}`)
         }
@@ -122,7 +160,6 @@ export class TransactionsService {
 
         for (const t of transactions.sort((a, b) => new Date(b.date) - new Date(a.date))) {
             t.category = await CategoriesService.getCategory(t.categoryId)
-            t.amount = this.formatCurrency(t.amount)
             const tr = document.createElement('tr')
             tr.innerHTML = `
                 <td data-label="Tipo">
@@ -133,7 +170,7 @@ export class TransactionsService {
                 <td data-label="Categoría">${t.category.name}</td>
                 <td data-label="Fecha">${t.date}</td>
                 <td data-label="Monto" class="transaction-amount-cell ${t.type}">
-                    ${t.type === 'income' ? '+' : '-'}${t.amount}
+                    ${t.type === 'income' ? '+' : '-'}${UIService.formatCurrency(t.amount)}
                 </td>
                 <td data-label="Acciones" class="action-buttons">
                     <button class="transaction-action-btn edit" title="Editar" data-transaction-id="${t.id}">
@@ -168,23 +205,6 @@ export class TransactionsService {
                     transactionsTable, transactionModal
                 )
             })
-        })
-    }
-
-    static formatCurrency(amount) {
-        return amount.toLocaleString('en-EN', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })
-    }
-
-    static formatDate(date) {
-        return new Date(date).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
         })
     }
 }

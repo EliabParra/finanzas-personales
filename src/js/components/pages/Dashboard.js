@@ -1,6 +1,7 @@
 import { Modal } from './../UI/Modal.js'
 import { TransactionsService } from '../../services/TransactionsService.js'
 import { CategoriesService } from '../../services/CategoriesService.js'
+import { UIService } from '../../services/UIService.js'
 
 export class Dashboard {
     constructor(onPageChange) {
@@ -31,7 +32,7 @@ export class Dashboard {
                     </div>
                     <div class="summary-card summary-balance">
                         <i class="fas fa-wallet summary-icon"></i> <!-- Icono para balance -->
-                        <span class="summary-label">Balance</span>
+                        <span class="summary-label">Balance Global</span>
                         <span class="summary-amount"></span>
                     </div>
                 </div>
@@ -50,20 +51,11 @@ export class Dashboard {
         `
 
         await this.renderTransactions()
+        this.transactionModal = new Modal('transaction', this.dashboardPage, this.handleSubmit.bind(this))
+        this.dashboardPage.appendChild(await this.transactionModal.render())
 
         const allTransactionsBtn = this.dashboardPage.querySelector('#allTransactionsBtn')
         allTransactionsBtn.addEventListener('click', async () => await this.onPageChange('transactions'))
-
-        // Modal logic
-        this.transactionModal = null
-        const openTransactionModalBtn = this.dashboardPage.querySelector('#openTransactionModalBtn')
-        openTransactionModalBtn.addEventListener('click', async () => {
-            if (!this.transactionModal) {
-                this.transactionModal = new Modal('transaction', this.dashboardPage, this.handleSubmit.bind(this))
-                this.dashboardPage.appendChild(await this.transactionModal.render())
-            }
-            this.transactionModal.openModal()
-        })
 
         return this.dashboardPage
     }
@@ -72,10 +64,10 @@ export class Dashboard {
         console.log('Renderizando transacciones')
         const transactionsList = this.dashboardPage.querySelector('.transactions-list')
         if (!transactionsList) return
-
+        
         transactionsList.innerHTML = ''
-        let transactions = await TransactionsService.getTransactions()
-        transactions = transactions.filter(t => Date.parse(t.date) >= Date.now() - 30 * 24 * 60 * 60 * 1000)
+        const transactions = await TransactionsService.getTransactionsOfLast30Days()
+        TransactionsService.updateBalance()
 
         if (transactions.length === 0) {
             transactionsList.innerHTML = `
@@ -90,7 +82,6 @@ export class Dashboard {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .forEach(async t => {
             t.category = await CategoriesService.getCategory(t.categoryId)
-            t.amount = this.formatCurrency(t.amount)
             const li = document.createElement('li')
             li.innerHTML = `
                 <li class="transaction-item">
@@ -101,19 +92,10 @@ export class Dashboard {
                         <div class="transaction-description">${t.description}</div>
                         <div class="transaction-category-date">${t.category.name} • ${t.date}</div>
                     </div>
-                    <div class="transaction-amount ${t.type === 'income' ? 'income' : 'expense'}">${t.amount}</div>
+                    <div class="transaction-amount ${t.type === 'income' ? 'income' : 'expense'}">${UIService.formatCurrency(t.amount)}</div>
                 </li>
             `
             transactionsList.appendChild(li)
-        })
-    }
-
-    formatCurrency(amount) {
-        return amount.toLocaleString('en-EN', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
         })
     }
 

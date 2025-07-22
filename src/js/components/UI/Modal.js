@@ -1,4 +1,7 @@
 import { CategoriesService } from "../../services/CategoriesService.js"
+import { TransactionsService } from "../../services/TransactionsService.js"
+import { BudgetsService } from "../../services/BudgetsService.js"
+import { UIService } from "../../services/UIService.js"
 
 export class Modal {
     constructor(type, page, onSubmit) {
@@ -8,7 +11,9 @@ export class Modal {
     }
 
     async render() {
-        this.currentDate = new Date().toISOString().split('T')[0]
+        const categories = await CategoriesService.getCategories()
+
+        this.currentDate = UIService.getCurrentDate()
         this.modal = document.createElement('div')
         this.modal.className = 'modal-overlay'
         this.modal.id = this.type + 'Modal'
@@ -76,19 +81,16 @@ export class Modal {
                         <label for="category">Categoría</label>
                         <select id="category" name="categoryId" required>
                             <option value="">Selecciona una categoría</option>
-                            ${await CategoriesService.getCategories().then(categories => {
-                                categories = categories.sort((a, b) => a.name.localeCompare(b.name))
-                                return categories.map(category => `
-                                    <option value="${category.id}">${category.name}</option>
-                                `).join('')
-                            })}
+                            ${categories.map(category => `
+                                <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="description">Descripción (opcional)</label>
                         <input type="text" name="description" id="description" placeholder="Ej: Cena con amigos" value="">
                     </div>
-                    <input type="hidden" id="transactionId">
+                    <input type="hidden" id="transactionId" name="id">
                 `
                 title.innerHTML = `Nueva Transacción 💸`
                 break
@@ -106,40 +108,54 @@ export class Modal {
                         <label for="categoryColor">Color</label>
                         <input type="color" id="categoryColor" name="color" value="#6a6ee0">
                     </div>
-                    <input type="hidden" id="categoryId">
+                    <input type="hidden" id="categoryId" name="id">
                 `
                 title.innerHTML = `Nueva Categoría ➕`
                 break
             case 'budget':
                 form.innerHTML = `
                     <div class="form-group">
+                        <label>Tipo</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="type" value="income" required>
+                                Ingreso
+                            </label>
+                            <label>
+                                <input type="radio" name="type" value="expense" required>
+                                Egreso
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="budgetCategory">Categoría</label>
-                        <select id="budgetCategory" required>
+                        <select id="budgetCategory" name="categoryId" required>
                             <option value="">Selecciona una categoría</option>
-                            <!-- Las categorías se cargarán aquí dinámicamente -->
-                            <option value="alimentacion">Alimentación</option>
-                            <option value="transporte">Transporte</option>
-                            <option value="ocio">Ocio</option>
-                            <option value="servicios">Servicios</option>
-                            <option value="salud">Salud</option>
-                            <option value="educacion">Educación</option>
-                            <option value="otros">Otros</option>
-                            <option value="entretenimiento">Entretenimiento</option>
+                            ${categories.map(category => `
+                                <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
+                            `).join('')}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="budgetLimit">Monto Límite</label>
-                        <input type="number" id="budgetLimit" placeholder="Ej: 200.00" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="budgetPeriod">Periodo</label>
-                        <select id="budgetPeriod" required>
-                            <option value="mensual">Mensual</option>
-                            <option value="semanal">Semanal</option>
-                            <option value="anual">Anual</option>
+                        <label for="budgetMonth">Mes</label>
+                        <select id="budgetMonth" name="month" required>
+                            <option value="">Selecciona un mes</option>
+                            ${Array.from({ length: 12 }, (_, i) => `
+                                <option value="${i + 1}" ${i + 1 === UIService.getCurrentMonth() ? 'selected' : ''}>
+                                    ${UIService.getMonthName(i + 1)}
+                                </option>
+                            `).join('')}
                         </select>
                     </div>
-                    <input type="hidden" id="budgetId">
+                    <div class="form-group">
+                        <label for="budgetYear">Año</label>
+                        <input type="number" id="budgetYear" name="year" min="2020" max="2100" required value="${UIService.getCurrentYear()}">
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetLimit">Monto</label>
+                        <input type="number" id="budgetLimit" name="limit" placeholder="Ej: 200.00" step="0.01" required>
+                    </div>
+                    <input type="hidden" id="budgetId" name="id">
                 `
                 title.innerHTML = `Nuevo Presupuesto 💸`
                 break
@@ -169,6 +185,8 @@ export class Modal {
 
         try {
             await this.onSubmit(data)
+            TransactionsService.updateBalance()
+            BudgetsService.updateMonthlySummary()
             this.closeModal()
         } catch (error) {
             throw new Error(`Error al guardar el ${this.type}: ${error.message}`)
@@ -187,7 +205,7 @@ export class Modal {
     setData(data) {
         this.modal.querySelectorAll('input').forEach(input => {
             if (input.name in data && input.type !== 'radio') input.value = data[input.name]
-            if (input.type === 'radio') input.checked = (input.value === data[input.name])
+            if (input.type === 'radio') input.checked = input.value === data[input.name]
         })
         this.modal.querySelectorAll('select').forEach(select => {
             if (select.name in data) {
@@ -198,10 +216,12 @@ export class Modal {
 
     clearData() {
         this.modal.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'radio' && input.type !== 'color') input.value = ''
+            if (input.type !== 'radio') input.value = ''
             if (input.type === 'radio') input.checked = false
             if (input.type === 'color') input.value = '#6a6ee0'
             if (input.type === 'date') input.value = this.currentDate
+            if (input.name === 'year') input.value = UIService.getCurrentYear()
+            if (input.name === 'month') input.value = UIService.getCurrentMonth()
         })
     }
 }

@@ -8,7 +8,9 @@ export class Transactions {
             category: '',
             startDate: '',
             endDate: '',
-            description: ''
+            description: '',
+            month: '',
+            year: ''
         }
     }
 
@@ -90,7 +92,9 @@ export class Transactions {
                 category: '',
                 startDate: '',
                 endDate: '',
-                description: ''
+                description: '',
+                month: '',
+                year: ''
             }
             filtersForm.reset()
             await TransactionsService.renderTransactions(
@@ -105,6 +109,10 @@ export class Transactions {
             this.currentFilters = Object.fromEntries(
                 new FormData(filtersForm)
             )
+
+            if (this.currentFilters.category) {
+                this.currentFilters.category = parseInt(this.currentFilters.category)
+            }
             
             await TransactionsService.renderTransactions(
                 await TransactionsService.getTransactions(this.currentFilters), 

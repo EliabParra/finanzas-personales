@@ -7,6 +7,7 @@ import { Categories } from './components/pages/Categories.js'
 import { Budgets } from './components/pages/Budgets.js'
 import { Analysis } from './components/pages/Analysis.js'
 import { TransactionsService } from './services/TransactionsService.js'
+import { BudgetsService } from './services/BudgetsService.js'
 
 class App {
     constructor() {
@@ -68,7 +69,8 @@ class App {
 
         if (component) mainContent.appendChild(component)
 
-        TransactionsService.updateBalance(await TransactionsService.getTransactions())
+        TransactionsService.updateBalance()
+        BudgetsService.updateMonthlySummary()
         
         if (window.AOS) {
             setTimeout(() => {
@@ -84,6 +86,7 @@ class App {
             AOS.init({
                 duration: 500,
                 once: true,
+                disable: 'mobile'
             })
         }
     }
