@@ -161,7 +161,8 @@
     .modal-content {
         width: 80%;
         padding: 20px;
-        height: 90%;
+        max-height: 90%;
+        height: auto;
     }
     .modal-title {
         font-size: 1.8em;
