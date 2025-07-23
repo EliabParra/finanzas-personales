@@ -19,7 +19,6 @@
 }
 
 .modal-content {
-    min-width: 320px;
     max-width: 480px;
     min-height: 180px;
     max-height: 85vh;
@@ -161,6 +160,7 @@
     .modal-content {
         width: 80%;
         padding: 20px;
+        height: 90%;
     }
     .modal-title {
         font-size: 1.8em;
@@ -184,8 +184,7 @@
 
 @media (max-width: 480px) {
     .modal-content {
-        width: 70%;
-        height: 90%;
+        width: 75%;
     }
 
     .form-group label, input, select {
