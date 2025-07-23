@@ -1,6 +1,5 @@
 import { TransactionsService } from '../../services/TransactionsService.js'
 import { AnalysisService } from '../../services/AnalysisService.js'
-import { UIService } from '../../services/UIService.js'
 
 export class Analysis {
     async render() {
@@ -77,11 +76,8 @@ export class Analysis {
         const transactions = await TransactionsService.getTransactions()
 
         const dateOptions = AnalysisService.getDateOptions(transactions)
-        console.log(dateOptions)
         const months = dateOptions.monthYear
         const years = dateOptions.year
-
-        console.log(months, years)
 
         function fillSelect(select, options, formatFn) {
             select.innerHTML = options.map(opt => `<option value="${opt}">${formatFn ? formatFn(opt) : opt}</option>`).join('')

@@ -1,13 +1,13 @@
 import DB from '../classes/DB.js'
 
 const DEFAULT_CATEGORIES = [
-    { name: 'Alimentación', icon: '☕', color: '#FFD700' },
-    { name: 'Transporte', icon: '🚌', color: '#FF9800' },
-    { name: 'Ocio', icon: '📺', color: '#FF5722' },
-    { name: 'Servicios', icon: '💻', color: '#D32F2F' },
-    { name: 'Salud', icon: '💊', color: '#4CAF50' },
-    { name: 'Educación', icon: '🏫', color: '#2196F3' },
-    { name: 'Otros', icon: '…', color: '#9C27B0' }
+    { name: 'Alimentación', icon: '☕', color: '#FF9800' },
+    { name: 'Transporte', icon: '🚌', color: '#FFD700' },
+    { name: 'Ocio', icon: '📺', color: '#E91E63' },
+    { name: 'Servicios', icon: '💻', color: '#2196F3' },
+    { name: 'Salud', icon: '💊', color: '#D32F2F' },
+    { name: 'Educación', icon: '🏫', color: '#9C27B0' },
+    { name: 'Otros', icon: '…', color: '#607D8B' }
 ]
 
 export class CategoriesService {
@@ -95,10 +95,6 @@ export class CategoriesService {
         .forEach(category => {
             const categoryItem = document.createElement('div')
             categoryItem.classList.add('category-item')
-            categoryItem.dataset.categoryId = category.id
-            categoryItem.dataset.categoryName = category.name
-            categoryItem.dataset.categoryIcon = category.icon
-            categoryItem.dataset.categoryColor = category.color
             categoryItem.innerHTML = `
                 <div class="category-info">
                     <div class="category-icon-wrapper" style="background-color: ${category.color};">
@@ -107,10 +103,10 @@ export class CategoriesService {
                     <span class="category-name">${category.name}</span>
                 </div>
                 <div class="category-actions">
-                    <button class="category-action-btn edit" title="Editar" data-category-id="${category.id}">
+                    <button class="action-btn edit" title="Editar" data-category-id="${category.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="category-action-btn delete" title="Eliminar" data-category-id="${category.id}">
+                    <button class="action-btn delete" title="Eliminar" data-category-id="${category.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -118,8 +114,8 @@ export class CategoriesService {
             categoriesGrid.appendChild(categoryItem)
         })
 
-        const editCategoryBtns = categoriesGrid.querySelectorAll('.category-action-btn.edit')
-        const deleteCategoryBtns = categoriesGrid.querySelectorAll('.category-action-btn.delete')
+        const editCategoryBtns = categoriesGrid.querySelectorAll('.action-btn.edit')
+        const deleteCategoryBtns = categoriesGrid.querySelectorAll('.action-btn.delete')
 
         editCategoryBtns.forEach(editCategoryBtn => {
             editCategoryBtn.addEventListener('click', async () => {

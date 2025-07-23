@@ -1,0 +1,79 @@
+.alert {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4000;
+    background: rgba(20, 20, 20, 0.98);
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 10px 2px #FFD700, 0 0 16px 4px #FF9800;
+    color: #FFD700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 8px;
+    text-align: center;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 70vw;
+    min-width: 80px;
+    width: auto;
+    pointer-events: auto;
+    opacity: 0.99;
+    flex-direction: row;
+    word-break: break-word;
+    white-space: pre-line;
+}
+.alert .alert-icon {
+    font-size: 2.2em;
+}
+.alert button {
+    background: none;
+    border: none;
+    color: #FFD700;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 4px;
+    transition: color 0.2s;
+    align-self: center;
+    padding: 0 2px;
+}
+.alert button:hover {
+    color: #FF9800;
+}
+.close-alert-btn {
+    background: none;
+    border: none;
+    color: #FFD700;
+    font-size: 2.2em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 4px;
+    transition: color 0.2s;
+    align-self: center;
+    padding: 0 2px;
+    transition: color 0.2s;
+}
+.close-alert-btn:hover {
+    color: #FF9800;
+}
+@media (max-width: 600px) {
+    .alert {
+        font-size: 0.85em;
+        padding: 3px 2px;
+        min-width: 0;
+        max-width: 95vw;
+        gap: 2px;
+    }
+    .alert .alert-icon {
+        font-size: 0.9em;
+    }
+    .close-alert-btn {
+        font-size: 0.9em;
+        margin-left: 2px;
+    }
+}

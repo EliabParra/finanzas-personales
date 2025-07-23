@@ -21,14 +21,14 @@ export class Dashboard {
                 </div>
                 <div class="summary-grid">
                     <div class="summary-card summary-income">
-                        <i class="fas fa-arrow-alt-circle-down summary-icon"></i> <!-- Icono para ingresos -->
+                        <i class="fas fa-arrow-alt-circle-down summary-icon green"></i> <!-- Icono para ingresos -->
                         <span class="summary-label">Ingresos</span>
-                        <span class="summary-amount"></span>
+                        <span class="summary-amount income"></span>
                     </div>
                     <div class="summary-card summary-expense">
-                        <i class="fas fa-arrow-alt-circle-up summary-icon"></i> <!-- Icono para egresos -->
+                        <i class="fas fa-arrow-alt-circle-up summary-icon red"></i> <!-- Icono para egresos -->
                         <span class="summary-label">Gastos</span>
-                        <span class="summary-amount"></span>
+                        <span class="summary-amount expense"></span>
                     </div>
                     <div class="summary-card summary-balance">
                         <i class="fas fa-wallet summary-icon"></i> <!-- Icono para balance -->

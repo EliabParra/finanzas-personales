@@ -15,6 +15,7 @@ export class Header {
         const header = document.createElement('header')
         header.classList.add('header')
         header.innerHTML = `
+            <button class="open-menu-btn" id="openMenuBtn"><i class="fas fa-bars"></i></button>
             <button class="nav-item ${this.currentPage === 'dashboard' ? 'active' : ''}" data-page="dashboard">
                 <i class="fas fa-home"></i> 
                 Dashboard
@@ -45,6 +46,17 @@ export class Header {
                 this.onPageChange(page)
                 this.updateActivePage(page)
             })
+        })
+
+        const openMenuBtn = header.querySelector('#openMenuBtn')
+        openMenuBtn.addEventListener('click', () => {
+            if (header.classList.contains('open')) {
+                header.classList.remove('open')
+                openMenuBtn.innerHTML = '<i class="fas fa-bars"></i>'
+            } else {
+                header.classList.add('open')
+                openMenuBtn.innerHTML = '<i class="fas fa-times"></i>'
+            }
         })
 
         return header

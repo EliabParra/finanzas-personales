@@ -1,0 +1,292 @@
+.transactions-list, .categories-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.transaction-item, .category-item {
+    display: flex;
+    align-items: center;
+    padding: 18px 25px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-soft);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.transaction-item:hover, .category-item:hover {
+    transform: translateY(-3px); /* Efecto de elevación */
+    border-color: var(--primary-color); /* Resalta con el color principal */
+}
+
+.transaction-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.6em;
+    margin-right: 20px;
+}
+
+.transaction-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-description {
+    font-family: var(--font-family-title);
+    font-weight: 600;
+
+    color: var(--text-dark);
+    font-size: 1em;
+    margin-bottom: 2px;
+}
+
+.transaction-category-date {
+    font-size: .85em;
+    color: var(--text-light);
+}
+
+.transaction-amount {
+    font-family: var(--font-family-title);
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-left: auto; /* Empuja el monto a la derecha */
+}
+
+.transaction-amount.income {
+    color: var(--success-color);
+}
+
+.transaction-amount.expense {
+    color: var(--danger-color);
+}
+
+.filters-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgb(26, 26, 26, 0.7) 0%, rgb(45, 24, 16, 0.7) 100%), url('../../assets/img/hunger-games-hero.webp');
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--gold-dark);
+    border-radius: 12px;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(218, 165, 32, 0.1),
+        inset 0 1px 0 rgba(218, 165, 32, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--gold-light);
+    font-size: 0.9em;
+    text-shadow: 0 0 8px rgba(218, 165, 32, 0.4);
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.filters-section input[type="text"],
+.filters-section input[type="date"],
+.filters-section select {
+    max-width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    border-radius: 8px;
+    font-size: 0.95em;
+    color: var(--warning-color);
+    background: linear-gradient(135deg, 
+        rgba(26, 26, 26, 0.8) 0%, 
+        rgba(45, 24, 16, 0.6) 50%, 
+        rgba(26, 26, 26, 0.8) 100%
+    );
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(218, 165, 32, 0.1);
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.filters-section input:focus,
+.filters-section select:focus {
+    border-color: var(--gold-light);
+    box-shadow: 
+        0 0 15px rgba(218, 165, 32, 0.4),
+        inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.filters-section input:hover,
+.filters-section select:hover {
+    border-color: rgba(218, 165, 32, 0.5);
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.3),
+        0 0 12px rgba(218, 165, 32, 0.2);
+}
+
+.filters-section select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px;
+}
+
+.filters-section select option {
+    background: var(--background-dark);
+    color: var(--hg-gold);
+    padding: 10px;
+    border: none;
+}
+
+.filter-buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.filter-buttons .btn-secondary {
+    background-color: var(--text-light);
+}
+
+.filter-buttons .btn-secondary:hover {
+    background-color: #888;
+}
+
+.transactions-table-container {
+    overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
+}
+
+.transactions-table {
+    width: 100%;
+    margin-top: 15px;
+    background-color: var(--card-background);
+    border-radius: 12px;
+    overflow: hidden; /* Para que los bordes redondeados se apliquen al contenido */
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.transactions-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.transactions-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: var(--background-light); /* Fondo suave al pasar el ratón */
+}
+
+.transaction-type-icon {
+    font-size: 1.1em;
+    margin-right: 5px;
+}
+
+.type-income {
+    color: var(--success-color);
+}
+
+.type-expense {
+    color: var(--danger-color);
+}
+
+.transaction-amount-cell.income {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.transaction-amount-cell.expense {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+.transaction-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.transaction-action-btn.edit {
+    color: var(--primary-color);
+}
+
+.transaction-action-btn.delete {
+    color: var(--danger-color);
+}
+
+.transaction-action-btn.edit:hover {
+    background-color: rgba(163, 42, 42, 0.15);
+    color: var(--accent-color);
+}
+
+.transaction-action-btn.delete:hover {
+    background-color: rgba(211, 47, 47, 0.15);
+    color: #FF5252;
+}
+
+@media (max-width: 768px) {
+    .transaction-item, .category-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 20px;
+        gap: 10px;
+    }
+    .transaction-details {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .transaction-amount {
+        margin-left: 0;
+        width: 100%;
+        text-align: right;
+    }
+
+    .filters-section {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        padding: 15px;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -173,10 +173,10 @@ export class TransactionsService {
                     ${t.type === 'income' ? '+' : '-'}${UIService.formatCurrency(t.amount)}
                 </td>
                 <td data-label="Acciones" class="action-buttons">
-                    <button class="transaction-action-btn edit" title="Editar" data-transaction-id="${t.id}">
+                    <button class="action-btn edit" title="Editar" data-transaction-id="${t.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="transaction-action-btn delete" title="Eliminar" data-transaction-id="${t.id}">
+                    <button class="action-btn delete" title="Eliminar" data-transaction-id="${t.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -184,8 +184,8 @@ export class TransactionsService {
             transactionsTable.querySelector('tbody').appendChild(tr)
         }
 
-        const editTransactionBtns = transactionsTable.querySelectorAll('.transaction-action-btn.edit')
-        const deleteTransactionBtns = transactionsTable.querySelectorAll('.transaction-action-btn.delete')
+        const editTransactionBtns = transactionsTable.querySelectorAll('.action-btn.edit')
+        const deleteTransactionBtns = transactionsTable.querySelectorAll('.action-btn.delete')
 
         editTransactionBtns.forEach(editTransactionBtn => {
             editTransactionBtn.addEventListener('click', async () => {
