@@ -1,0 +1,159 @@
+.budgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.budget-item {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.budget-item-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.budget-category-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    color: white;
+    flex-shrink: 0;
+}
+
+.budget-info {
+    flex-grow: 1;
+}
+
+.budget-category-name {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.budget-period {
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+.budget-amounts {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
+}
+
+.budget-limit, .budget-spent {
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.budget-progress-bar-container {
+    width: 100%;
+    background-color: var(--background-light);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.budget-progress-bar {
+    height: 100%;
+    width: 0%; /* Se actualiza con JS */
+    background-color: var(--primary-color); /* Color por defecto */
+    border-radius: 10px;
+    transition: width 0.5s ease-out, background-color 0.3s ease;
+}
+
+.budget-progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    color: var(--text-light);
+}
+
+.budget-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.budget-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.budget-action-btn.edit {
+    color: var(--primary-color);
+}
+
+.budget-action-btn.delete {
+    color: var(--danger-color);
+}
+
+.budget-action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.budget-action-btn.delete:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* Colores para la barra de progreso y el texto de progreso */
+.progress-green .budget-progress-bar { background-color: var(--success-color); }
+.progress-yellow .budget-progress-bar { background-color: var(--warning-color); }
+.progress-red .budget-progress-bar { background-color: var(--danger-color); }
+.progress-red .budget-spent { color: var(--danger-color); }
+
+
+@media (max-width: 768px) {
+    /* Presupuestos responsivos */
+    .budgets-grid {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+    }
+
+    .budget-item {
+        padding: 20px;
+    }
+
+    .budget-category-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5em;
+    }
+
+    .budget-category-name {
+        font-size: 1.2em;
+    }
+
+    .budget-limit, .budget-spent {
+        font-size: 1.1em;
+    }
+
+    .budget-action-btn {
+        font-size: 1em;
+        padding: 6px;
+    }
+}

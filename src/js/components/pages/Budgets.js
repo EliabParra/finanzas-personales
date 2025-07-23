@@ -48,8 +48,8 @@ export class Budgets {
                 <div class="card-header">
                     <h2 class="card-title">Histórico de Presupuestos</h2>
                 </div>
-                <div class="transactions-table-container">
-                    <table class="data-table budgets-table" id="budgetsTable">
+                <div class="data-table-container">
+                    <table class="data-table data-table" id="budgetsTable">
                         
                     </table>
                 </div>

@@ -59,26 +59,26 @@ export class Modal {
                         <label for="type">Tipo de Transacción</label>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="type" value="income" required> 
+                                <input type="radio" name="type" value="income"> 
                                 Ingreso
                             </label>
                             <label>
-                                <input type="radio" name="type" value="expense" required> 
+                                <input type="radio" name="type" value="expense"> 
                                 Egreso
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="amount">Monto</label>
-                        <input type="number" name="amount" id="amount" placeholder="Ej: 50.00" step="0.01" required value="">
+                        <input type="number" name="amount" id="amount" placeholder="Ej: 50.00" step="0.01" value="">
                     </div>
                     <div class="form-group">
                         <label for="date">Fecha</label>
-                        <input type="date" name="date" id="date" value="${this.currentDate}" required>
+                        <input type="date" name="date" id="date" max="${UIService.getCurrentDate()}" value="${this.currentDate}">
                     </div>
                     <div class="form-group">
                         <label for="category">Categoría</label>
-                        <select id="category" name="categoryId" required>
+                        <select id="category" name="categoryId">
                             <option value="">Selecciona una categoría</option>
                             ${categories.map(category => `
                                 <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
@@ -97,7 +97,7 @@ export class Modal {
                 form.innerHTML = `
                     <div class="form-group">
                         <label for="categoryName">Nombre de la Categoría</label>
-                        <input type="text" id="categoryName" name="name" placeholder="Ej: Café, Gimnasio" required>
+                        <input type="text" id="categoryName" name="name" placeholder="Ej: Café, Gimnasio">
                     </div>
                     <div class="form-group">
                         <label for="categoryIcon">Emoji</label>
@@ -117,18 +117,18 @@ export class Modal {
                         <label>Tipo</label>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="type" value="income" required>
+                                <input type="radio" name="type" value="income">
                                 Ingreso
                             </label>
                             <label>
-                                <input type="radio" name="type" value="expense" required>
+                                <input type="radio" name="type" value="expense">
                                 Egreso
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="budgetCategory">Categoría</label>
-                        <select id="budgetCategory" name="categoryId" required>
+                        <select id="budgetCategory" name="categoryId">
                             <option value="">Selecciona una categoría</option>
                             ${categories.map(category => `
                                 <option value="${category.id}">${category.name} ${category.icon ? `(${category.icon})` : ''}</option>
@@ -137,7 +137,7 @@ export class Modal {
                     </div>
                     <div class="form-group">
                         <label for="budgetMonth">Mes</label>
-                        <select id="budgetMonth" name="month" required>
+                        <select id="budgetMonth" name="month">
                             <option value="">Selecciona un mes</option>
                             ${Array.from({ length: 12 }, (_, i) => `
                                 <option value="${i + 1}" ${i + 1 === UIService.getCurrentMonth() ? 'selected' : ''}>
@@ -148,11 +148,11 @@ export class Modal {
                     </div>
                     <div class="form-group">
                         <label for="budgetYear">Año</label>
-                        <input type="number" id="budgetYear" name="year" min="2020" max="2100" required value="${UIService.getCurrentYear()}">
+                        <input type="number" id="budgetYear" name="year" min="2020" max="2100" value="${UIService.getCurrentYear()}">
                     </div>
                     <div class="form-group">
                         <label for="budgetLimit">Monto</label>
-                        <input type="number" id="budgetLimit" name="limit" placeholder="Ej: 200.00" step="0.01" required>
+                        <input type="number" id="budgetLimit" name="limit" placeholder="Ej: 200.00" step="0.01">
                     </div>
                     <input type="hidden" id="budgetId" name="id">
                 `
@@ -225,6 +225,7 @@ export class Modal {
 
     closeModal() {
         this.modal.classList.remove('show')
+        if (document.querySelector('.alert')) Alerts.removeAlert(document.querySelector('.alert'))
         this.clearData()
     }
 
@@ -241,18 +242,7 @@ export class Modal {
     }
 
     clearData() {
-        // Resetea el formulario completo si existe
-        const form = this.modal.querySelector('form');
-        if (form) form.reset();
-
-        // Lógica especial para campos personalizados
-        this.modal.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'radio') input.value = '';
-            if (input.type === 'radio') input.checked = false;
-            if (input.type === 'color') input.value = '#6a6ee0';
-            if (input.type === 'date') input.value = this.currentDate;
-            if (input.name === 'year') input.value = UIService.getCurrentYear();
-            if (input.name === 'month') input.value = UIService.getCurrentMonth();
-        });
+        const form = this.modal.querySelector('form')
+        if (form) form.reset()
     }
 }

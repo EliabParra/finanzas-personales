@@ -12,19 +12,27 @@ export class UIService {
 
     static formatCurrency(amount) {
         amount = parseFloat(amount)
-        return new Intl.NumberFormat('en-EN', {
+        return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD'
         }).format(amount)
     }
 
     static formatDate(date) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' }
-        return new Date(date + 1).toLocaleDateString('es-ES', options)
+        const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Caracas' }
+        return new Date(date).toLocaleDateString('es-ES', options)
     }
 
     static getCurrentDate() {
-        return new Date().toISOString().split('T')[0]
+        const formatter = new Intl.DateTimeFormat('en-CA', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'America/Caracas',
+        })
+
+        const formattedDate = formatter.format(new Date())
+        return formattedDate
     }
 
     static getCurrentMonth() {

@@ -1,6 +1,7 @@
 import { Modal } from './../UI/Modal.js'
 import { TransactionsService } from '../../services/TransactionsService.js'
 import { CategoriesService } from '../../services/CategoriesService.js'
+import { UIService } from '../../services/UIService.js'
 export class Transactions {
     constructor() {
         this.currentFilters = {
@@ -48,11 +49,11 @@ export class Transactions {
                     </div>
                     <div class="filter-group">
                         <label for="filterStartDate">Desde</label>
-                        <input type="date" id="filterStartDate" name="startDate">
+                        <input type="date" id="filterStartDate" name="startDate" max="${UIService.getCurrentDate()}">
                     </div>
                     <div class="filter-group">
                         <label for="filterEndDate">Hasta</label>
-                        <input type="date" id="filterEndDate" name="endDate">
+                        <input type="date" id="filterEndDate" name="endDate" max="${UIService.getCurrentDate()}">
                     </div>
                     <div class="filter-group">
                         <label for="filterDescription">Descripción</label>
@@ -64,8 +65,8 @@ export class Transactions {
                     </div>
                 </form>
 
-                <div class="transactions-table-container" data-aos="fade-up" data-aos-delay="100">
-                    <table class="transactions-table" id="transactionsTable">
+                <div class="data-table-container" data-aos="fade-up" data-aos-delay="100">
+                    <table class="data-table" id="transactionsTable">
                         
                     </table>
                 </div>
