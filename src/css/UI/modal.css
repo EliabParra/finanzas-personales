@@ -185,6 +185,7 @@
 @media (max-width: 480px) {
     .modal-content {
         width: 70%;
+        height: 90%;
     }
 
     .form-group label, input, select {
