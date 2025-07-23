@@ -17,7 +17,7 @@ export class Alerts {
             <span class="alert-message">${message}</span>
         `
         alert.appendChild(closeBtn)
-        document.body.appendChild(alert)
+        document.querySelector('#app').appendChild(alert)
     }
 
     static removeAlert(alert) {

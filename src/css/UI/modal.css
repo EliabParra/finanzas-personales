@@ -159,7 +159,7 @@
 
 @media (max-width: 768px) {
     .modal-content {
-        width: 95%;
+        width: 80%;
         padding: 20px;
     }
     .modal-title {
@@ -184,6 +184,10 @@
 
 @media (max-width: 480px) {
     .modal-content {
-        width: 80%;
+        width: 70%;
+    }
+
+    .form-group label, input, select {
+        font-size: 0.8em;
     }
 }
