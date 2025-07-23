@@ -1,0 +1,238 @@
+.chart-section {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 87, 34, 0.03) 100%);
+    border-radius: var(--border-radius-soft);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+}
+
+.chart-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--hg-gold) 0%, var(--hg-flame) 50%, var(--hg-flame2) 100%);
+    border-radius: var(--border-radius-soft) var(--border-radius-soft) 0 0;
+}
+
+.chart-container {
+    position: relative;
+    height: 450px; /* Altura aumentada para evitar cortes */
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px; /* Padding para evitar cortes */
+    box-sizing: border-box;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: var(--border-radius-soft);
+    border: 2px solid var(--hg-gold);
+    box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.3),
+        inset 0 0 20px rgba(255, 215, 0, 0.1);
+    overflow: hidden; /* Evita desbordamiento */
+}
+
+.chart-container canvas {
+    max-width: calc(100% - 30px) !important; /* Espacio para padding */
+    max-height: calc(100% - 30px) !important;
+    width: auto !important;
+    height: auto !important;
+    display: block;
+    margin: auto;
+}
+
+/* Controles para gráficos estilo Los Juegos del Hambre */
+.chart-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 43, 43, 0.9) 100%);
+    border-radius: var(--border-radius-soft);
+    border: 1px solid var(--hg-gold);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.chart-controls select {
+    padding: 6px 9px;
+    border: 2px solid var(--hg-gold);
+    border-radius: var(--border-radius-sharp);
+    font-size: 1em;
+    font-family: var(--font-family-body);
+    font-weight: 600;
+    color: var(--hg-gold);
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 43, 43, 0.9) 100%);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: 
+        linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 43, 43, 0.9) 100%),
+        url('data:image/svg+xml;utf8,<svg fill="%23FFD700" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat, no-repeat;
+    background-position: center, right 12px center;
+    background-size: cover, 18px;
+    padding-right: 45px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.chart-controls select:hover {
+    border-color: var(--hg-flame);
+    color: var(--hg-flame);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(255, 152, 0, 0.4),
+        inset 0 0 10px rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+    background-image: 
+        linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 43, 43, 0.9) 100%),
+        url('data:image/svg+xml;utf8,<svg fill="%23FF9800" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+}
+
+.chart-controls select:focus {
+    border-color: var(--hg-flame2);
+    color: var(--hg-flame2);
+    box-shadow: 
+        0 0 0 3px rgba(255, 87, 34, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 87, 34, 0.5);
+    outline: none;
+    transform: translateY(-3px);
+}
+
+.chart-controls select option {
+    background: var(--background-dark);
+    color: var(--hg-gold);
+    padding: 10px;
+    border: none;
+}
+
+/* Efectos especiales para gráficos */
+.chart-container::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--hg-gold), var(--hg-flame), var(--hg-flame2), var(--hg-gold));
+    z-index: -1;
+    border-radius: var(--border-radius-soft);
+    opacity: 0.6;
+    animation: hungerGamesGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes hungerGamesGlow {
+    0% {
+        opacity: 0.4;
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        opacity: 0.8;
+        filter: hue-rotate(10deg);
+    }
+}
+
+/* Mejoras para evitar cortes en diferentes tamaños */
+.analysis .card {
+    overflow: visible;
+    padding: 30px 25px;
+}
+
+.analysis .card-header {
+    margin-bottom: 25px;
+}
+
+.analysis .card-title {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    text-shadow: 
+        0 0 10px var(--hg-gold),
+        0 2px 8px var(--hg-flame2),
+        0 4px 16px rgba(255, 215, 0, 0.3);
+}
+
+/* Media queries para responsividad mejorada */
+@media (max-width: 1200px) {
+    .chart-container {
+        height: 420px;
+        padding: 12px;
+    }
+    
+    .chart-container canvas {
+        max-width: calc(100% - 24px);
+        max-height: calc(100% - 24px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .chart-controls {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .analysis .card-header {
+        flex-direction: column;
+    }
+
+    .chart-controls {
+        flex-direction: row;
+    }
+
+    .chart-container {
+        height: 350px;
+        padding: 10px;
+    }
+    
+    .chart-container canvas {
+        max-width: calc(100% - 20px);
+        max-height: calc(100% - 20px);
+    }
+
+    .chart-controls select {
+        width: 100%;
+        font-size: 0.95em;
+        padding: 10px 16px;
+        padding-right: 40px;
+    }
+    
+    .analysis .card-title {
+        font-size: 1.8em;
+    }
+    
+    .chart-section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container {
+        height: 300px;
+        padding: 8px;
+    }
+    
+    .chart-container canvas {
+        max-width: calc(100% - 16px);
+        max-height: calc(100% - 16px);
+    }
+    
+    .analysis .card-title {
+        font-size: 1.6em;
+    }
+
+    .chart-controls {
+        flex-direction: column;
+    }
+}

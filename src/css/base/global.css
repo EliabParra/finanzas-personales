@@ -1,0 +1,264 @@
+:root {
+    --primary-color: #A32A2A;    /* Rojo sangre/granate, fuerte y principal */
+    --secondary-color: #6C7A89;  /* Gris acero, para elementos secundarios */
+    --accent-color: #C0C0C0;     /* Plata metálico, para acentos y bordes */
+    --background-dark: #2B2B2B;  /* Negro carbón, fondo principal */
+    --background-light: #3A3A3A; /* Gris oscuro, para tarjetas/elementos */
+    --text-dark: #B0B0B0;        /* Gris medio, para texto secundario */
+    --text-light: #E0E0E0;       /* Gris muy claro, para texto principal */
+    --success-color: #4CAF50; /* Verde para ingresos/positivo */
+    --danger-color: #D32F2F;     /* Rojo más brillante, para egresos */
+    --warning-color: #FFC107;    /* Amarillo oro, para advertencias */
+    --card-background:  #333333;  /* Gris oscuro casi negro para el fondo de las tarjetas */
+    --border-color: #555555;     /* Gris oscuro para bordes */
+    --hg-gold: #FFD700;
+    --hg-black: #1a1a1a;
+    --hg-flame: #FF9800;
+    --hg-flame2: #FF5722;
+    --hg-glow: 0 0 12px 2px var(--hg-gold), 0 0 24px 4px var(--hg-flame2);
+    --shadow-dark: rgba(0, 0, 0, 0.4); /* Sombra más oscura */
+    --font-family-title: 'Orbitron', sans-serif; /* Fuente impactante para títulos */
+    --font-family-body: 'Roboto Condensed', sans-serif; /* Fuente legible y condensada */
+    --border-radius-sharp: 3px;  /* Bordes ligeramente afilados */
+    --border-radius-soft: 6px;   /* Bordes ligeramente suaves */
+}
+
+/* Estilos generales del cuerpo y contenedor */
+body {
+    font-family: var(--font-family-body);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Estilos para tarjetas */
+.card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-soft);
+    padding: 25px;
+    overflow: hidden;
+    transform: perspective(1px) translateZ(0);
+    margin-bottom: 30px;
+    transition: all .2s ease;
+    border: 2px solid var(--hg-gold);
+    box-shadow: 
+        0 0 8px 1px rgba(255, 215, 0, 0.3), 
+        0 0 16px 2px rgba(255, 87, 34, 0.2), 
+        0 8px 25px var(--shadow-dark);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to right, var(--hg-gold), var(--hg-flame2), var(--hg-gold));
+    height: 7px;
+    border-top-left-radius: var(--border-radius-soft);
+    border-top-right-radius: var(--border-radius-soft);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    gap: 30px;
+}
+
+.card-title {
+    font-family: var(--font-family-title);
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* Encabezados de sección con sombra de texto dorada */
+.card-title, .modal-title, .main-nav, .summary-label {
+    text-shadow: 0 2px 8px var(--hg-gold), 0 0 2px var(--hg-flame2);
+    color: var(--hg-gold);
+    letter-spacing: 1.5px;
+}
+
+/* Barras de desplazamiento personalizadas para una apariencia más inmersiva */
+::-webkit-scrollbar {
+    width: 10px;
+    background: var(--hg-black);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--hg-gold), var(--hg-flame2));
+    border-radius: 8px;
+}
+
+/* Estilo de insignia de la tarjeta «distrito» */
+.card::after {
+    content: 'District 12';
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: var(--hg-black);
+    color: var(--hg-gold);
+    font-family: var(--font-family-title);
+    font-size: 0.85em;
+    padding: 3px 12px;
+    border-radius: 12px;
+    border: 1.5px solid var(--hg-gold);
+    box-shadow: 0 0 8px var(--hg-gold);
+    letter-spacing: 1px;
+    opacity: 0.85;
+    z-index: 2;
+}
+
+/* Efectos al pasar el cursor con transiciones doradas/llameantes - Más sutiles */
+.card:hover, .modal-content:hover {
+    box-shadow: 
+        0 0 12px 3px rgba(255, 215, 0, 0.25), 
+        0 0 20px 4px rgba(255, 87, 34, 0.15), 
+        0 8px 25px var(--shadow-dark);
+    border-color: var(--hg-flame2);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Estilos para botones */
+.btn {
+    padding: 14px 30px;
+    border-radius: var(--border-radius-sharp);
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 700;
+    text-transform: uppercase; /* Mayúsculas */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn:hover {
+    background-color: #B33D3D; /* Tono más oscuro al pasar el ratón */
+    transform: translateY(-2px); /* Efecto de elevación sutil */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+    border-color: #FFFFFF; /* Borde más claro */
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Botones con detalles dorados y llamas */
+.btn {
+    background: linear-gradient(90deg, var(--hg-gold) 60%, var(--hg-flame2) 100%);
+    color: var(--hg-black);
+    border: 2px solid var(--hg-gold);
+    box-shadow: 0 2px 8px var(--hg-gold);
+    text-shadow: 0 1px 2px #fff8;
+}
+.btn:hover {
+    background: linear-gradient(90deg, var(--hg-flame2) 0%, var(--hg-gold) 100%);
+    color: #fff;
+    border-color: var(--hg-flame2);
+    box-shadow: 0 0 16px var(--hg-flame2), 0 2px 8px var(--hg-gold);
+}
+
+/* Añadir, editar y eliminar iconos con motivos de Los juegos del hambre (emoji) */
+.btn i.fa-plus-circle:before { content: '🔥'; font-style: normal; }
+.btn i.fa-edit:before { content: '🏹'; font-style: normal; }
+.btn i.fa-trash-alt:before { content: '🦅'; font-style: normal; }
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: 16px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.action-btn.edit {
+    color: var(--primary-color);
+}
+
+.action-btn.delete {
+    color: var(--danger-color);
+}
+
+.action-btn.edit::before {
+    content: '🏹';
+}
+
+.action-btn.delete::before {
+    content: '🦅';
+}
+
+.action-btn:hover {
+    color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.action-btn.edit:hover {
+    color: var(--accent-color);
+    background-color: rgba(192, 192, 192, 0.1);
+}
+
+.action-btn.delete:hover {
+    color: var(--danger-color);
+    background-color: rgba(211, 47, 47, 0.1);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    .card {
+        padding: 20px;
+    }
+    .card-title {
+        font-size: 1.6em;
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .action-buttons {
+        gap: 5px;
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

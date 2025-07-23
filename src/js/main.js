@@ -86,7 +86,6 @@ class App {
             AOS.init({
                 duration: 500,
                 once: true,
-                disable: 'mobile'
             })
         }
     }

@@ -131,10 +131,10 @@ export class BudgetsService {
                     }
                 </td>
                 <td class="action-buttons">
-                    <button class="budget-action-btn edit" title="Editar Presupuesto" data-budget-id="${b.id}">
+                    <button class="action-btn edit" title="Editar Presupuesto" data-budget-id="${b.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="budget-action-btn delete" title="Eliminar Presupuesto" data-budget-id="${b.id}">
+                    <button class="action-btn delete" title="Eliminar Presupuesto" data-budget-id="${b.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -142,8 +142,8 @@ export class BudgetsService {
             budgetsTable.querySelector('tbody').appendChild(tr)
         }
 
-        const editBudgetBtns = budgetsTable.querySelectorAll('.budget-action-btn.edit')
-        const deleteBudgetBtns = budgetsTable.querySelectorAll('.budget-action-btn.delete')
+        const editBudgetBtns = budgetsTable.querySelectorAll('.action-btn.edit')
+        const deleteBudgetBtns = budgetsTable.querySelectorAll('.action-btn.delete')
 
         editBudgetBtns.forEach(editBudgetBtn => {
             editBudgetBtn.addEventListener('click', async () => {
@@ -248,10 +248,10 @@ export class BudgetsService {
                     <span>${Math.round(progress)}%</span>
                 </div>
                 <div class="budget-actions">
-                    <button class="budget-action-btn edit" title="Editar Presupuesto" data-budget-id="${b.id}">
+                    <button class="action-btn edit" title="Editar Presupuesto" data-budget-id="${b.id}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="budget-action-btn delete" title="Eliminar Presupuesto" data-budget-id="${b.id}">
+                    <button class="action-btn delete" title="Eliminar Presupuesto" data-budget-id="${b.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -261,8 +261,8 @@ export class BudgetsService {
         }
 
         // Eventos de edición y eliminación
-        const editBudgetBtns = budgetsGrid.querySelectorAll('.budget-action-btn.edit')
-        const deleteBudgetBtns = budgetsGrid.querySelectorAll('.budget-action-btn.delete')
+        const editBudgetBtns = budgetsGrid.querySelectorAll('.action-btn.edit')
+        const deleteBudgetBtns = budgetsGrid.querySelectorAll('.action-btn.delete')
 
         editBudgetBtns.forEach(editBudgetBtn => {
             editBudgetBtn.addEventListener('click', async () => {

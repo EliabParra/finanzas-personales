@@ -1,0 +1,110 @@
+.form-group {
+    margin-bottom: 24px;
+    text-align: left;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--hg-gold);
+    text-transform: uppercase;
+    font-size: 0.9em;
+    font-family: var(--font-family-title);
+    letter-spacing: 1px;
+    text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);
+    position: relative;
+}
+
+.form-group label::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 30%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--hg-gold) 0%, transparent 100%);
+    border-radius: 1px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: calc(100% - 28px);
+    padding: 14px 18px;
+    border: 2px solid rgba(85, 85, 85, 0.8);
+    border-radius: var(--border-radius-sharp);
+    font-size: 1.05em;
+    font-family: var(--font-family-body);
+    background: linear-gradient(135deg, 
+        rgba(26, 26, 26, 0.95) 0%, 
+        rgba(58, 58, 58, 0.85) 100%);
+    color: var(--text-light);
+    box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.3),
+        0 1px 3px rgba(255, 215, 0, 0.1);
+    transition: 
+        border-color 0.3s ease, 
+        box-shadow 0.3s ease, 
+        background-color 0.3s ease,
+        transform 0.2s ease;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.form-group input[type="text"]:hover,
+.form-group input[type="number"]:hover,
+.form-group input[type="date"]:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(255, 215, 0, 0.2),
+        0 2px 8px rgba(255, 152, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="date"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--hg-gold);
+    box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(255, 215, 0, 0.2),
+        0 0 15px rgba(255, 215, 0, 0.3),
+        0 2px 12px rgba(255, 152, 0, 0.2);
+    outline: none;
+    background: linear-gradient(135deg, 
+        rgba(26, 26, 26, 0.98) 0%, 
+        rgba(68, 68, 68, 0.9) 100%);
+    transform: translateY(-2px);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23B0B0B0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') !important;
+    background-repeat: no-repeat !important;
+    background-position: right 15px center !important;
+    background-size: 20px !important;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+option {
+    background-color: var(--background-dark);
+}
