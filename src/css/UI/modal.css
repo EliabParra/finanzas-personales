@@ -125,6 +125,7 @@
 
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group input[type="date"],
 .form-group select {
     width: calc(100% - 20px);
     padding: 12px 10px;
@@ -188,6 +189,14 @@
     }
 
     .form-group label, input, select {
+        font-size: 0.7em;
+    }
+
+    .form-group input[type="date"] {
         font-size: 0.8em;
+    }
+
+    .modal-title {
+        font-size: 1.4em;
     }
 }
